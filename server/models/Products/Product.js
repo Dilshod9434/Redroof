@@ -1,5 +1,5 @@
-const { Schema, model, Types } = require("mongoose");
-const Joi = require("joi");
+const { Schema, model, Types } = require('mongoose');
+const Joi = require('joi');
 
 const product = new Schema(
   {
@@ -7,14 +7,15 @@ const product = new Schema(
     code: { type: Number },
     total: { type: Number, default: 0 },
     minimumcount: { type: Number, default: 0 },
-    productdata: { type: Schema.Types.ObjectId, ref: "ProductData" },
-    unit: { type: Schema.Types.ObjectId, ref: "Unit" },
-    price: { type: Schema.Types.ObjectId, ref: "ProductPrice" },
-    category: { type: Schema.Types.ObjectId, ref: "Category" },
-    producttype: { type: Schema.Types.ObjectId, ref: "ProductType" },
-    brand: { type: Schema.Types.ObjectId, ref: "Brand" },
-    market: { type: Schema.Types.ObjectId, ref: "Market", required: true },
-    connections: [{ type: Schema.Types.ObjectId, ref: "Market" }],
+    productdata: { type: Schema.Types.ObjectId, ref: 'ProductData' },
+    unit: { type: Schema.Types.ObjectId, ref: 'Unit' },
+    price: { type: Schema.Types.ObjectId, ref: 'ProductPrice' },
+    category: { type: Schema.Types.ObjectId, ref: 'Category' },
+    producttype: { type: Schema.Types.ObjectId, ref: 'ProductType' },
+    isFree: { type: Boolean, default: false },
+    brand: { type: Schema.Types.ObjectId, ref: 'Brand' },
+    market: { type: Schema.Types.ObjectId, ref: 'Market', required: true },
+    connections: [{ type: Schema.Types.ObjectId, ref: 'Market' }],
     isArchive: { type: Boolean, default: false },
   },
   {
@@ -69,4 +70,4 @@ function validateProductExcel(product) {
 
 module.exports.validateProduct = validateProduct;
 module.exports.validateProductExcel = validateProductExcel;
-module.exports.Product = model("Product", product);
+module.exports.Product = model('Product', product);

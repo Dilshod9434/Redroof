@@ -1,6 +1,7 @@
 const { Client, validateClient } = require("../../models/Sales/Client.js");
 const { Market } = require("../../models/MarketAndBranch/Market");
 const { Packman } = require("../../models/Sales/Packman.js");
+const { SaleConnector } = require("../../models/Sales/SaleConnector.js");
 
 module.exports.register = async (req, res) => {
     try {
@@ -83,7 +84,7 @@ module.exports.register = async (req, res) => {
     }
 };
 
-module.exports.getAll = async (req, res) => {
+module.exports.getAll = async (req, res) => { 
     try {
         const { market } = req.body;
 
@@ -94,11 +95,24 @@ module.exports.getAll = async (req, res) => {
             });
         }
 
-        const client = await Client.find({ market })
+        const clients = await Client.find({ market })
             .select("name")
-            .populate("packman", "name");
+            .populate("packman", "name")
+            .lean()
 
-        res.status(201).send(client);
+        if (clients.length > 0) {
+            for (const client of clients) {
+                const saleconnector = await SaleConnector.find({
+                    client: client._id
+                })
+                .sort({createdAt: -1})
+                if (saleconnector.length > 0) {
+                    client.saleconnectorid = saleconnector[0]._id;
+                }
+            }
+        }
+
+        res.status(201).send(clients);
     } catch (error) {
         res.status(501).json({ error: "Serverda xatolik yuz berdi..." });
     }

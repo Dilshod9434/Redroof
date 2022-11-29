@@ -36,7 +36,7 @@ function validateSaleProduct(saleproduct) {
     unitprice: Joi.number().required(),
     unitpriceuzs: Joi.number().required(),
     pieces: Joi.number().required(),
-    product: Joi.string().required(),
+    product: Joi.string().optional(),
     market: Joi.string(),
     user: Joi.string(),
   });

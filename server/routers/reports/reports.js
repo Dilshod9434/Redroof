@@ -250,6 +250,7 @@ module.exports.getReport = async (req, res) => {
 
     res.status(201).send(reports);
   } catch (error) {
+    console.log(error);
     res.status(400).json({ error: 'Serverda xatolik yuz berdi...' });
   }
 };
@@ -779,6 +780,7 @@ module.exports.getProductsReport = async (req, res) => {
 
     const products = await Product.find({
       market,
+      isFree: { $ne: true },
     })
       .select('total price')
       .populate('price', 'incomingprice incomingpriceuzs');
@@ -795,6 +797,11 @@ module.exports.getProductsReport = async (req, res) => {
       productsreport.totalprice += product.price.incomingprice;
       productsreport.totalpriceuzs += product.price.incomingpriceuzs;
     });
+
+    productsreport.totalprice =
+      Math.round(productsreport.totalprice * 1000) / 1000;
+    productsreport.totalpriceuzs =
+      Math.round(productsreport.totalpriceuzs * 1) / 1;
 
     res.status(200).json(productsreport);
   } catch (error) {

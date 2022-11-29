@@ -29,6 +29,7 @@ export const SalesListTableRow = ({
             state: {saleconnector, returnProducts},
         })
     }
+ 
 
     return (
         <>
@@ -37,7 +38,7 @@ export const SalesListTableRow = ({
                     <td className='text-left td'>
                         {currentPage * countPage + 1 + index}
                     </td>
-                    <td className='td '>
+                    <td className='td'>
                         <div className='flex justify-between'>
                             <span>
                                 {new Date(

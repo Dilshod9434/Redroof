@@ -18,6 +18,7 @@ const { Category } = require('../../models/Products/Category');
 const { DailySaleConnector } = require('../../models/Sales/DailySaleConnector');
 const ObjectId = require('mongodb').ObjectId;
 const { filter } = require('lodash');
+const { ProductPrice } = require('../../models/Products/ProductPrice');
 
 const convertToUsd = (value) => Math.round(value * 1000) / 1000;
 const convertToUzs = (value) => Math.round(value);
@@ -35,6 +36,7 @@ module.exports.register = async (req, res) => {
       user,
       comment,
     } = req.body;
+
     const marke = await Market.findById(market);
     if (!marke) {
       return res.status(400).json({
@@ -88,11 +90,8 @@ module.exports.register = async (req, res) => {
         pieces,
         product: product._id,
       });
-      const produc = await Product.findById(product._id).populate(
-        'productdata',
-        'name'
-      );
-      if (produc.total < pieces) {
+      const produc = await getProduct(saleproduct, market);
+      if (product._id && produc.total < pieces) {
         return res.status(400).json({
           error: `Diqqat! ${produc.productdata.name} mahsuloti omborda yetarlicha mavjud emas. Qolgan mahsulot soni ${produc.total} ta`,
         });
@@ -109,11 +108,11 @@ module.exports.register = async (req, res) => {
         unitprice: convertToUsd(unitprice),
         unitpriceuzs: convertToUzs(unitpriceuzs),
         pieces,
-        product: product._id,
+        product: produc._id,
         market,
         user,
-        previous: produc.total,
-        next: produc.total - Number(pieces),
+        previous: produc.total || 1,
+        next: produc.total - Number(pieces) || 1,
       });
 
       all.push(newSaleProduct);
@@ -276,6 +275,7 @@ module.exports.register = async (req, res) => {
 
     res.status(201).send(connector);
   } catch (error) {
+    console.log(error);
     res.status(400).json({ error: 'Serverda xatolik yuz berdi...' });
   }
 };
@@ -580,7 +580,7 @@ module.exports.getsaleconnectors = async (req, res) => {
       },
     })
       .select('-isArchive -updatedAt -market -__v')
-      .sort({ _id: -1 })
+      .sort({ updatedAt: -1 })
       .populate({
         path: 'products',
         select: 'user',
@@ -990,7 +990,7 @@ module.exports.getreportproducts = async (req, res) => {
       })
       .populate({
         path: 'product',
-        select: 'productdata',
+        select: 'productdata isFree',
         populate: {
           path: 'productdata',
           select: 'name code',
@@ -999,7 +999,7 @@ module.exports.getreportproducts = async (req, res) => {
       })
       .populate({
         path: 'product',
-        select: 'unit',
+        select: 'unit isFree',
         populate: {
           path: 'unit',
           select: 'name',
@@ -1009,6 +1009,7 @@ module.exports.getreportproducts = async (req, res) => {
         filter(saleproducts, (saleproduct) =>
           search.nameofclient.length > 0
             ? saleproduct.product.productdata &&
+              !saleproduct.product.isFree &&
               saleproduct.product.productdata !== null &&
               saleproduct.user &&
               saleproduct.user !== null &&
@@ -1016,6 +1017,7 @@ module.exports.getreportproducts = async (req, res) => {
               saleproduct.saleconnector.client &&
               saleproduct.saleconnector.client !== null
             : saleproduct.product.productdata &&
+              !saleproduct.product.isFree &&
               saleproduct.product.productdata !== null &&
               saleproduct.user &&
               saleproduct.user !== null
@@ -1041,7 +1043,7 @@ module.exports.getreportproducts = async (req, res) => {
       })
       .populate({
         path: 'product',
-        select: 'productdata',
+        select: 'productdata isFree',
         populate: {
           path: 'productdata',
           select: 'name code',
@@ -1050,7 +1052,7 @@ module.exports.getreportproducts = async (req, res) => {
       })
       .populate({
         path: 'product',
-        select: 'unit',
+        select: 'unit isFree',
         populate: {
           path: 'unit',
           select: 'name',
@@ -1060,6 +1062,7 @@ module.exports.getreportproducts = async (req, res) => {
         filter(saleproducts, (saleproduct) =>
           search.nameofclient.length > 0
             ? saleproduct.product.productdata &&
+              !saleproduct.product.isFree &&
               saleproduct.product.productdata !== null &&
               saleproduct.user &&
               saleproduct.user !== null &&
@@ -1067,6 +1070,7 @@ module.exports.getreportproducts = async (req, res) => {
               saleproduct.saleconnector.client &&
               saleproduct.saleconnector.client !== null
             : saleproduct.product.productdata &&
+              !saleproduct.product.isFree &&
               saleproduct.product.productdata !== null &&
               saleproduct.user &&
               saleproduct.user !== null
@@ -1216,4 +1220,57 @@ const editSaleConnector = async (client, saleconnectorid) => {
   const saleconnector = await SaleConnector.findById(saleconnectorid);
   saleconnector.client = client._id;
   await saleconnector.save();
+};
+
+const createFreeProduct = async (saleproduct, market) => {
+  const { incomingprice, unitprice, incomingpriceuzs, unitpriceuzs, product } =
+    saleproduct;
+  const newProductData = new ProductData({
+    name: product.name,
+    code: '9999',
+    market,
+  });
+  await newProductData.save();
+
+  const newProduct = new Product({
+    productdata: newProductData._id,
+    isFree: true,
+    market,
+  });
+  await newProduct.save();
+
+  const newPrice = new ProductPrice({
+    incomingprice,
+    incomingpriceuzs,
+    sellingprice: unitprice,
+    sellingpriceuzs: unitpriceuzs,
+    product: newProduct._id,
+    market,
+  });
+  await newPrice.save();
+
+  newProduct.price = newPrice._id;
+  await newProduct.save();
+
+  newProductData.products.push(newProduct._id);
+  await newProductData.save();
+
+  const freeProduct = await Product.findById(newProduct._id).populate(
+    'productdata',
+    'name'
+  );
+
+  return freeProduct;
+};
+
+const getProduct = async (saleproduct, market) => {
+  if (saleproduct.product._id) {
+    const produc = await Product.findById(saleproduct.product._id).populate(
+      'productdata',
+      'name'
+    );
+    return produc;
+  } else {
+    return createFreeProduct(saleproduct, market);
+  }
 };

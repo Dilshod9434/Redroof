@@ -1,15 +1,15 @@
-const { Product } = require("../../models/Products/Product");
-const { Market } = require("../../models/MarketAndBranch/Market");
-const { Category } = require("../../models/Products/Category");
-const { ProductType } = require("../../models/Products/ProductType");
-const { Unit } = require("../../models/Products/Unit");
-const { Brand } = require("../../models/Products/Brand");
-const { ProductPrice } = require("../../models/Products/ProductPrice");
+const { Product } = require('../../models/Products/Product');
+const { Market } = require('../../models/MarketAndBranch/Market');
+const { Category } = require('../../models/Products/Category');
+const { ProductType } = require('../../models/Products/ProductType');
+const { Unit } = require('../../models/Products/Unit');
+const { Brand } = require('../../models/Products/Brand');
+const { ProductPrice } = require('../../models/Products/ProductPrice');
 const {
   InventoryConnector,
-} = require("../../models/Inventory/InventoriesConnector");
-const { Inventory } = require("../../models/Inventory/Inventory");
-const { ProductData } = require("../../models/Products/Productdata");
+} = require('../../models/Inventory/InventoriesConnector');
+const { Inventory } = require('../../models/Inventory/Inventory');
+const { ProductData } = require('../../models/Products/Productdata');
 
 //Product for Inventory
 module.exports.getProductsInventory = async (req, res) => {
@@ -22,35 +22,36 @@ module.exports.getProductsInventory = async (req, res) => {
         .json({ message: "Diqqat! Do'kon malumotlari topilmadi" });
     }
     const productcode = new RegExp(
-      ".*" + search ? search.code : "" + ".*",
-      "i"
+      '.*' + search ? search.code : '' + '.*',
+      'i'
     );
     const productname = new RegExp(
-      ".*" + search ? search.name : "" + ".*",
-      "i"
+      '.*' + search ? search.name : '' + '.*',
+      'i'
     );
 
     const productcategory = new RegExp(
-      ".*" + search ? search.category : "" + ".*",
-      "i"
+      '.*' + search ? search.category : '' + '.*',
+      'i'
     );
 
     const products = await Product.find({
       market,
+      isFree: { $ne: true },
     })
       .sort({ code: 1 })
-      .select("total market unit price")
+      .select('total market unit price')
       .populate({
-        path: "productdata",
-        select: "name code",
+        path: 'productdata',
+        select: 'name code',
         match: { name: productname, code: productcode },
       })
       .populate({
-        path: "category",
-        select: "code",
+        path: 'category',
+        select: 'code',
         match: { code: productcategory },
       })
-      .populate("unit", "name");
+      .populate('unit', 'name');
 
     const filter = products.filter((product) => {
       return product.productdata !== null && product.category !== null;
@@ -70,7 +71,7 @@ module.exports.getProductsInventory = async (req, res) => {
 
     if (!inventoryConnector) {
       inventoryConnector = new InventoryConnector({
-        id: "INV-" + (inventoryConnectorCount + 1),
+        id: 'INV-' + (inventoryConnectorCount + 1),
         market,
       });
       await inventoryConnector.save();
@@ -81,7 +82,7 @@ module.exports.getProductsInventory = async (req, res) => {
         market,
         inventoryConnector: inventoryConnector._id,
         product: sendingProducts[i]._id,
-      }).select("-__iv -updatedAt -createdAt -isArchive");
+      }).select('-__iv -updatedAt -createdAt -isArchive');
 
       inventory
         ? (sendingProducts[i] = {
@@ -99,16 +100,14 @@ module.exports.getProductsInventory = async (req, res) => {
               productdata: sendingProducts[i].productdata._id,
             },
           });
-          
     }
-    
 
     res.status(201).json({
       products: sendingProducts,
       count,
     });
   } catch (error) {
-    res.status(500).json({ message: "Serverda xatolik yuz berdi..." });
+    res.status(500).json({ message: 'Serverda xatolik yuz berdi...' });
   }
 };
 
@@ -125,7 +124,7 @@ module.exports.updateInventory = async (req, res) => {
     if (!inventory.inventorycount || inventory.inventorycount < 0) {
       return res.status(401).json({
         message:
-          "Diqqat! Inventarizatsiya qiymatlari kiritilmagan yoki xato kiritilmoqda",
+          'Diqqat! Inventarizatsiya qiymatlari kiritilmagan yoki xato kiritilmoqda',
       });
     }
     const inventoryConnector = await InventoryConnector.findById(
@@ -143,35 +142,36 @@ module.exports.updateInventory = async (req, res) => {
     } else await Inventory.findByIdAndUpdate(inventory._id, inventory);
 
     const productcode = new RegExp(
-      ".*" + search ? search.code : "" + ".*",
-      "i"
+      '.*' + search ? search.code : '' + '.*',
+      'i'
     );
     const productname = new RegExp(
-      ".*" + search ? search.name : "" + ".*",
-      "i"
+      '.*' + search ? search.name : '' + '.*',
+      'i'
     );
 
     const productcategory = new RegExp(
-      ".*" + search ? search.category : "" + ".*",
-      "i"
+      '.*' + search ? search.category : '' + '.*',
+      'i'
     );
 
     const products = await Product.find({
       market,
+      isFree: { $ne: true },
     })
       .sort({ code: 1 })
-      .select("total market unit price")
+      .select('total market unit price')
       .populate({
-        path: "productdata",
-        select: "name code",
+        path: 'productdata',
+        select: 'name code',
         match: { name: productname, code: productcode },
       })
       .populate({
-        path: "category",
-        select: "code",
+        path: 'category',
+        select: 'code',
         match: { code: productcategory },
       })
-      .populate("unit", "name");
+      .populate('unit', 'name');
 
     const filter = products.filter((product) => {
       return product.productdata !== null && product.category !== null;
@@ -186,7 +186,7 @@ module.exports.updateInventory = async (req, res) => {
         market,
         inventoryConnector: inventoryConnector._id,
         product: sendingProducts[i]._id,
-      }).select("-__iv -updatedAt -createdAt -isArchive");
+      }).select('-__iv -updatedAt -createdAt -isArchive');
       inventory
         ? (sendingProducts[i] = {
             ...sendingProducts[i]._doc,
@@ -209,7 +209,7 @@ module.exports.updateInventory = async (req, res) => {
       count,
     });
   } catch (error) {
-    res.status(500).json({ message: "Serverda xatolik yuz berdi..." });
+    res.status(500).json({ message: 'Serverda xatolik yuz berdi...' });
   }
 };
 
@@ -227,8 +227,8 @@ module.exports.completed = async (req, res) => {
       market,
       completed: false,
     })
-      .select("inventories completed")
-      .populate("inventories", "product inventorycount productcount");
+      .select('inventories completed')
+      .populate('inventories', 'product inventorycount productcount');
 
     inventoryConnector.inventories.forEach(async (inventory) => {
       await Product.findByIdAndUpdate(inventory.product, {
@@ -239,9 +239,9 @@ module.exports.completed = async (req, res) => {
     inventoryConnector.completed = true;
     await inventoryConnector.save();
 
-    res.status(201).json({ message: "Inventarizatsiya jarayoni yakunlandi" });
+    res.status(201).json({ message: 'Inventarizatsiya jarayoni yakunlandi' });
   } catch (error) {
-    res.status(500).json({ message: "Serverda xatolik yuz berdi..." });
+    res.status(500).json({ message: 'Serverda xatolik yuz berdi...' });
   }
 };
 
@@ -271,13 +271,13 @@ module.exports.inventoryconnetors = async (req, res) => {
         $lt: endDate,
       },
     })
-      .select("inventories createdAt completed id")
+      .select('inventories createdAt completed id')
       .sort({ _id: -1 })
       .skip(currentPage * countPage)
       .limit(countPage);
     res.status(201).json({ connectors: inventoryConnectors, count });
   } catch (error) {
-    res.status(500).json({ message: "Serverda xatolik yuz berdi..." });
+    res.status(500).json({ message: 'Serverda xatolik yuz berdi...' });
   }
 };
 
@@ -297,15 +297,15 @@ module.exports.inventoryproducts = async (req, res) => {
       inventoryConnector: id,
       market,
     })
-      .select("inventorycount productcount createdAt comment")
-      .populate("productdata", "name code")
+      .select('inventorycount productcount createdAt comment')
+      .populate('productdata', 'name code')
       .populate(
-        "price",
-        "incomingprice sellingprice incomingpriceuzs sellingpriceuzs"
+        'price',
+        'incomingprice sellingprice incomingpriceuzs sellingpriceuzs'
       );
 
     res.status(201).json({ inventories, inventoriesConnector });
   } catch (error) {
-    res.status(401).json({ message: "Serverda xatolik yuz berdi..." });
+    res.status(401).json({ message: 'Serverda xatolik yuz berdi...' });
   }
 };
