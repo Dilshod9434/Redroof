@@ -204,6 +204,13 @@ const navListForDirector = [
     },
     {
         id: 8,
+        label: 'Kirim/Chiqim',
+        icon: <FaCashRegister size={'1.5rem'} />,
+        path: 'income_consumption',
+        submenu: false,
+    },
+    {
+        id: 9,
         label: 'Valyuta kursi',
         icon: <IoCash size={'1.5rem'} />,
         path: 'valyuta',

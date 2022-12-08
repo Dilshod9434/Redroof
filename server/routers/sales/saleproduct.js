@@ -293,6 +293,8 @@ module.exports.addproducts = async (req, res) => {
       market,
       user,
       comment,
+      isPrepayment,
+      prepaymentType,
     } = req.body;
 
     const marke = await Market.findById(market);
@@ -509,6 +511,15 @@ module.exports.addproducts = async (req, res) => {
     dailysaleconnector.products = [...products];
     await dailysaleconnector.save();
 
+    if (isPrepayment) {
+      const clientValue = await Client.findById(client._id);
+      clientValue.prepayment =
+        clientValue.prepayment - payment[`${prepaymentType}`];
+      clientValue.prepaymentuzs =
+        clientValue.prepaymentuzs - payment[`${prepaymentType + 'uzs'}`];
+      await clientValue.save();
+    }
+
     const connector = await DailySaleConnector.findById(dailysaleconnector._id)
       .select('-isArchive -updatedAt -market -__v')
       .populate({
@@ -530,6 +541,7 @@ module.exports.addproducts = async (req, res) => {
       .populate('saleconnector', 'id');
     res.status(201).send(connector);
   } catch (error) {
+    console.log(error);
     res.status(400).json({ error: 'Serverda xatolik yuz berdi...' });
   }
 };
@@ -574,7 +586,7 @@ module.exports.getsaleconnectors = async (req, res) => {
     const saleconnectors = await SaleConnector.find({
       market,
       id,
-      createdAt: {
+      updatedAt: {
         $gte: startDate,
         $lt: endDate,
       },

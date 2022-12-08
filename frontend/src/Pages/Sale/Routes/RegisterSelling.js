@@ -101,6 +101,9 @@ const RegisterSelling = () => {
     const [saleComment, setSaleComment] = useState('')
     const [lowUnitpriceProducts, setLowUnitpriceProducts] = useState([])
     const [wholesale, setWholesale] = useState(false)
+
+    const [isPrepayment, setIsPrepayment] = useState(false)
+
     let delay = null
     const headers = [
         {title: '№'},
@@ -134,6 +137,7 @@ const RegisterSelling = () => {
         setPaymentDebt(0)
         setPaymentDebtUzs(0)
         setDiscountSelectOption({label: '%', value: '%'})
+        setIsPrepayment(false)
     }
     const toggleCheckModal = () => {
         setModalVisible(!modalVisible)
@@ -145,12 +149,13 @@ const RegisterSelling = () => {
     const currentEchangerate = (uzs, usd) => {
         setExchangerate(convertToUzs(uzs / usd))
     }
-    console.log(tableProducts)
+
     const handleClickPayment = () => {
         if (tableProducts.length) {
-            const filteredData = tableProducts
-                .filter((item) => item.unitprice <= item.incomingprice)
-                // .map((item) => item.product._id)
+            const filteredData = tableProducts.filter(
+                (item) => item.unitprice <= item.incomingprice
+            )
+            // .map((item) => item.product._id)
             if (filteredData.length > 0) {
                 setLowUnitpriceProducts(filteredData)
                 warningLessSellPayment()
@@ -178,6 +183,7 @@ const RegisterSelling = () => {
         }
     }
     const handleChangePaymentType = (type) => {
+        console.log(type)
         const all = allPayment - Number(paymentDiscount)
         const allUzs = allPaymentUzs - Number(paymentDiscountUzs)
         if (paymentType !== type) {
@@ -516,6 +522,7 @@ const RegisterSelling = () => {
         setTotalPaymentsUzs(0)
         setTotalPaymentsUsd(0)
         togglePaymentModal(bool)
+        setIsPrepayment(false)
     }
     const handleClickPay = () => {
         if (delay === null) {
@@ -533,6 +540,7 @@ const RegisterSelling = () => {
     }
     const handleClosePay = () => {
         setModalVisible(false)
+        setIsPrepayment(false)
         setTimeout(() => {
             setModalBody('')
         }, 500)
@@ -596,6 +604,10 @@ const RegisterSelling = () => {
             user: user._id,
             saleconnectorid: saleConnectorId,
             comment: saleComment,
+        }
+        if (isPrepayment) {
+            body.isPrepayment = isPrepayment
+            body.prepaymentType = clientValue.prepaymentType
         }
         dispatch(saleConnectorId ? addPayment(body) : makePayment(body)).then(
             ({payload, error}) => {
@@ -1293,9 +1305,9 @@ const RegisterSelling = () => {
                 value: '',
             },
             ...map([...clients], (client) => ({
+                ...client,
                 value: client._id,
                 label: client.name,
-                saleconnectorid: client?.saleconnectorid || null,
             })),
         ])
     }, [clients, t])
@@ -1384,6 +1396,60 @@ const RegisterSelling = () => {
         window.history.replaceState({}, document.title)
     }, [location.state])
 
+    const calcPrepayment = () => {
+        if (clientValue.prepayment >= allPayment) {
+            return {
+                prepayment: allPayment,
+                prepaymentuzs: allPaymentUzs,
+            }
+        } else {
+            return {
+                prepayment: clientValue.prepayment,
+                prepaymentuzs: clientValue.prepaymentuzs,
+            }
+        }
+    }
+
+    const handlePrepayment = (e) => {
+        let val = e.target.checked
+        if (!clientValue.prepayment) {
+            return universalToast(
+                'Mijozda oldindan tulov mavjud emas!',
+                'warning'
+            )
+        } else {
+            setIsPrepayment(val)
+            handleChangePaymentType('mixed')
+            const {prepayment, prepaymentuzs} = calcPrepayment()
+            setAllPayment(prepayment)
+            setAllPaymentUzs(prepaymentuzs)
+            if (clientValue.prepaymentType === 'cash') {
+                setPaymentCash(prepayment)
+                setPaymentCashUzs(prepaymentuzs)
+                setPaid(prepayment)
+                setPaidUzs(prepaymentuzs)
+                setPaymentDebt(0)
+                setPaymentDebtUzs(0)
+            }
+            if (clientValue.prepaymentType === 'card') {
+                setPaymentCard(prepayment)
+                setPaymentCardUzs(prepaymentuzs)
+                setPaid(prepayment)
+                setPaidUzs(prepaymentuzs)
+                setPaymentDebt(0)
+                setPaymentDebtUzs(0)
+            }
+            if (clientValue.prepaymentType === 'trnasfer') {
+                setPaymentTransfer(prepayment)
+                setPaymentTransferUzs(prepaymentuzs)
+                setPaid(prepayment)
+                setPaidUzs(prepaymentuzs)
+                setPaymentDebt(0)
+                setPaymentDebtUzs(0)
+            }
+        }
+    }
+
     return (
         <div className={'flex grow relative overflow-auto'}>
             {loadingMakePayment && (
@@ -1429,6 +1495,9 @@ const RegisterSelling = () => {
                 changeComment={changeComment}
                 saleComment={saleComment}
                 onDoubleClick={handleDoubleClick}
+                isPrepayment={isPrepayment}
+                handlePrepayment={handlePrepayment}
+                clientValue={clientValue}
             />
             <UniversalModal
                 body={modalBody}

@@ -14,7 +14,8 @@ import {
     successAddSupplierMessage,
     successDeleteSupplierMessage,
     successUpdateSupplierMessage,
-    warningEmptyInput
+    universalToast,
+    warningEmptyInput,
 } from '../../Components/ToastMessages/ToastMessages.js'
 import {
     addClients,
@@ -23,29 +24,44 @@ import {
     getAllPackmans,
     getClients,
     getClientsByFilter,
-    updateClients
+    updateClients,
 } from './clientsSlice'
-import {checkEmptyString} from '../../App/globalFunctions.js'
+import {
+    checkEmptyString,
+    UsdToUzs,
+    UzsToUsd,
+} from '../../App/globalFunctions.js'
 import {useTranslation} from 'react-i18next'
 
 const ClientsPage = () => {
     const {t} = useTranslation(['common'])
     const dispatch = useDispatch()
 
-    const {
-        packmans,
-        clients,
-        loading,
-        searchedClients,
-        total,
-        totalSearched
-    } = useSelector((state) => state.clients)
+    const {packmans, clients, loading, searchedClients, total, totalSearched} =
+        useSelector((state) => state.clients)
+    const {currency, currencyType} = useSelector((state) => state.currency)
 
     const headers = [
         {title: '№', styles: 'w-[8%] text-left'},
-        {title: t('Agent'), styles: 'w-[41%] text-left'},
         {title: t('Mijoz'), styles: 'w-[41%] text-left'},
-        {title: '', styles: 'w-[8%] text-left'}
+        {title: 'Oldindan tulov'},
+        {title: 'Qarz'},
+        {title: '', styles: 'w-[8%] text-left'},
+    ]
+
+    const prePaymentTypes = [
+        {
+            label: 'Naqd',
+            value: 'cash',
+        },
+        {
+            label: 'Plastik',
+            value: 'card',
+        },
+        {
+            label: "O'tkazma",
+            value: 'transfer',
+        },
     ]
 
     // states
@@ -56,16 +72,22 @@ const ClientsPage = () => {
     const [packman, setPackman] = useState(null)
     const [currentClient, setCurrentClient] = useState('')
     const [deletedCLients, setDeletedClients] = useState(null)
-    const [modalVisible, setModalViseble] = useState(false)
+    const [modalVisible, setModalVisible] = useState(false)
     const [stickyForm, setStickyForm] = useState(false)
     const [showByTotal, setShowByTotal] = useState('10')
     const [currentPage, setCurrentPage] = useState(0)
     const [filteredDataTotal, setFilteredDataTotal] = useState(total)
     const [searchByName, setSearchByName] = useState('')
     const [searchByDelivererName, setSearchByDelivererName] = useState('')
+    const [printedSelling, setPrintedSelling] = useState(null)
+    const [modalBody, setModalBody] = useState(null)
+    const [prepayment, setPrepayment] = useState('')
+    const [prepaymentUzs, setPrepaymentUzs] = useState('')
+    const [prepaymentType, setPrepaymentType] = useState(null)
+
     // modal toggle
     const toggleModal = () => {
-        setModalViseble(!modalVisible)
+        setModalVisible(!modalVisible)
         setTimeout(() => {
             setDeletedClients(null)
         }, 500)
@@ -77,15 +99,43 @@ const ClientsPage = () => {
     }
     // table edit and delete
     const handleEditClients = (client) => {
-        setPackman(client.packman ? {label: client.packman.name, value: client.packman._id} : '')
+        setPackman(
+            client.packman
+                ? {label: client.packman.name, value: client.packman._id}
+                : ''
+        )
         setClientName(client.name || '')
         setCurrentClient(client)
         setStickyForm(true)
+        setPrepayment(client?.prepayment || 0)
+        setPrepaymentUzs(client?.prepaymentuzs || 0)
+        setPrepaymentType(
+            (client?.prepaymentType === 'cash' && {
+                label: 'Naqd',
+                value: 'cash',
+            }) ||
+                (client?.prepaymentType === 'card' && {
+                    label: 'Plastik',
+                    value: 'card',
+                }) ||
+                (client?.prepaymentType === 'transfer' && {
+                    label: "O'tkazma",
+                    value: 'transfer',
+                }) ||
+                null
+        )
     }
 
     const handleDeleteClient = (client) => {
         setDeletedClients(client)
-        setModalViseble(true)
+        setModalBody('approve')
+        setModalVisible(true)
+    }
+
+    const handlePrint = (sale) => {
+        setModalBody('allChecks')
+        setPrintedSelling(sale)
+        setModalVisible(true)
     }
 
     const handleClickApproveToDelete = () => {
@@ -96,24 +146,51 @@ const ClientsPage = () => {
             currentPage,
             countPage: showByTotal,
             search: {
-                client: searchByName.replace(/\s+/g, ' ').trim()
-            }
+                client: searchByName.replace(/\s+/g, ' ').trim(),
+            },
         }
         dispatch(deleteClients(body)).then(({error}) => {
             if (!error) {
                 clearForm()
                 successDeleteSupplierMessage()
+                getData()
             }
         })
         toggleModal()
     }
+
+    const handleChangePrePayment = (e) => {
+        let val = Number(e.target.value || 0)
+        if (currencyType === 'USD') {
+            setPrepayment(val)
+            setPrepaymentUzs(UsdToUzs(val, currency))
+        } else {
+            setPrepaymentUzs(val)
+            setPrepayment(UzsToUsd(val, currency))
+        }
+    }
+
+    const getData = () => {
+        const body = {
+            currentPage,
+            countPage: showByTotal,
+            search: {
+                client: searchByName.replace(/\s+/g, ' ').trim(),
+                packman: searchByDelivererName.replace(/\s+/g, ' ').trim(),
+            },
+        }
+        dispatch(getClients(body))
+    }
+
     // handle submit of inputs
     const addNewClients = (e) => {
         e.preventDefault()
-        const {failed, message} = checkEmptyString([{
-            value: clientName,
-            message: t('Mijoz ismi')
-        }])
+        const {failed, message} = checkEmptyString([
+            {
+                value: clientName,
+                message: t('Mijoz ismi'),
+            },
+        ])
         if (failed) {
             warningEmptyInput(message)
         } else {
@@ -124,24 +201,34 @@ const ClientsPage = () => {
                 countPage: showByTotal,
                 search: {
                     client: searchByName.replace(/\s+/g, ' ').trim(),
-                    packman: searchByDelivererName.replace(/\s+/g, ' ').trim()
-                }
+                    packman: searchByDelivererName.replace(/\s+/g, ' ').trim(),
+                },
+            }
+            if (prepayment > 0 && !prepaymentType) {
+                return universalToast('Tulov turini tanlang', 'warning')
+            }
+            if (prepayment > 0 && prepaymentType) {
+                body.prepayment = prepayment
+                body.prepaymentuzs = prepaymentUzs
+                body.prepaymentType = prepaymentType.value
             }
             dispatch(addClients(body)).then(({error}) => {
                 if (!error) {
                     clearForm()
                     successAddSupplierMessage()
+                    getData()
                 }
             })
         }
     }
-
     const handleEdit = (e) => {
         e.preventDefault()
-        const {failed, message} = checkEmptyString([{
-            value: clientName,
-            message: t('Mijoz ismi')
-        }])
+        const {failed, message} = checkEmptyString([
+            {
+                value: clientName,
+                message: t('Mijoz ismi'),
+            },
+        ])
         if (failed) {
             warningEmptyInput(message)
         } else {
@@ -153,13 +240,22 @@ const ClientsPage = () => {
                 countPage: showByTotal,
                 search: {
                     client: searchByName.replace(/\s+/g, ' ').trim(),
-                    packman: searchByDelivererName.replace(/\s+/g, ' ').trim()
-                }
+                    packman: searchByDelivererName.replace(/\s+/g, ' ').trim(),
+                },
+            }
+            if (prepayment > 0 && !prepaymentType) {
+                return universalToast('Tulov turini tanlang', 'warning')
+            }
+            if (prepayment > 0 && prepaymentType) {
+                body.prepayment = prepayment
+                body.prepaymentuzs = prepaymentUzs
+                body.prepaymentType = prepaymentType.value
             }
             dispatch(updateClients(body)).then(({error}) => {
                 if (!error) {
                     clearForm()
                     successUpdateSupplierMessage()
+                    getData()
                 }
             })
         }
@@ -170,6 +266,9 @@ const ClientsPage = () => {
         setClientName('')
         setPackman(null)
         setStickyForm(false)
+        setPrepayment('')
+        setPrepaymentUzs('')
+        setPrepaymentType(null)
     }
 
     // filter by total
@@ -183,7 +282,8 @@ const ClientsPage = () => {
         let val = e.target.value
         let valForSearch = val.toLowerCase().replace(/\s+/g, ' ').trim()
         setSearchByName(val)
-        if (searchedData.length > 0 || totalSearched > 0) dispatch(clearSearchedClients())
+        if (searchedData.length > 0 || totalSearched > 0)
+            dispatch(clearSearchedClients())
         if (valForSearch === '') {
             setData(clients)
             setFilteredDataTotal(total)
@@ -201,7 +301,7 @@ const ClientsPage = () => {
         let valForSearch = val.toLowerCase().replace(/\s+/g, ' ').trim()
         setSearchByDelivererName(val)
         ;(searchedData.length > 0 || totalSearched > 0) &&
-        dispatch(clearSearchedClients())
+            dispatch(clearSearchedClients())
         if (valForSearch === '') {
             setData(clients)
             setFilteredDataTotal(total)
@@ -221,8 +321,8 @@ const ClientsPage = () => {
                 countPage: showByTotal,
                 search: {
                     client: searchByName.replace(/\s+/g, ' ').trim(),
-                    packman: searchByDelivererName.replace(/\s+/g, ' ').trim()
-                }
+                    packman: searchByDelivererName.replace(/\s+/g, ' ').trim(),
+                },
             }
             dispatch(getClientsByFilter(body))
         }
@@ -242,8 +342,8 @@ const ClientsPage = () => {
             countPage: showByTotal,
             search: {
                 client: searchByName.replace(/\s+/g, ' ').trim(),
-                packman: searchByDelivererName.replace(/\s+/g, ' ').trim()
-            }
+                packman: searchByDelivererName.replace(/\s+/g, ' ').trim(),
+            },
         }
         dispatch(getClients(body))
         //    eslint-disable-next-line react-hooks/exhaustive-deps
@@ -271,35 +371,27 @@ const ClientsPage = () => {
             exit='collapsed'
             variants={{
                 open: {opacity: 1, height: 'auto'},
-                collapsed: {opacity: 0, height: 0}
+                collapsed: {opacity: 0, height: 0},
             }}
             transition={{duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98]}}
         >
             <UniversalModal
-                headerText={`${deletedCLients && deletedCLients.name
-                } ${t('ismli mijozni o`chirishni tasdiqlaysizmi?')}`}
+                headerText={`${deletedCLients && deletedCLients.name} ${t(
+                    'ismli mijozni o`chirishni tasdiqlaysizmi?'
+                )}`}
                 title={t('O`chirilgan mijozni tiklashning imkoni mavjud emas!')}
                 toggleModal={toggleModal}
-                body={'approve'}
+                body={modalBody}
                 approveFunction={handleClickApproveToDelete}
                 isOpen={modalVisible}
+                printedSelling={printedSelling}
             />
             <form
-                className={`flex gap-[1.25rem] bg-background flex-col mainPadding transition ease-linear duration-200 ${stickyForm && 'stickyForm'
+                className={`flex gap-[1.25rem] bg-background flex-col mainPadding transition ease-linear duration-200 ${
+                    stickyForm && 'stickyForm'
                 }`}
             >
                 <div className='supplier-style'>
-                    <FieldContainer
-                        value={packman}
-                        onChange={handleChangeOptions}
-                        label={t('Agentni tanlang')}
-                        placeholder={t('misol: Dilso`z')}
-                        select={true}
-                        options={packmanOptions}
-                        maxWidth={'w-[21rem]'}
-                        border={true}
-                    />
-
                     <FieldContainer
                         value={clientName}
                         label={t('Mijoz ismi')}
@@ -307,13 +399,37 @@ const ClientsPage = () => {
                         maxWidth={'w-[21rem]'}
                         type={'string'}
                         onChange={handleChangeClientName}
+                        border={true}
                     />
-                    <div className={'flex gap-[1.25rem] grow w-[18.3125rem]'}>
+                    <FieldContainer
+                        value={
+                            currencyType === 'USD' ? prepayment : prepaymentUzs
+                        }
+                        label={'Oldindan tulov'}
+                        placeholder={t('misol: 10000')}
+                        type={'number'}
+                        onChange={handleChangePrePayment}
+                        border={true}
+                    />
+                    <FieldContainer
+                        value={prepaymentType}
+                        onChange={(e) => setPrepaymentType(e)}
+                        label={t('Tulov turi')}
+                        placeholder={t('misol: Naqd')}
+                        select={true}
+                        options={prePaymentTypes}
+                    />
+                </div>
+
+                <div className='w-full flex justify-end'>
+                    <div className={'flex gap-[1.25rem] w-[18.3125rem]'}>
                         <Button
                             add={!stickyForm}
                             edit={stickyForm}
                             text={
-                                stickyForm ? t(`Saqlash`) : t('Yangi agent qo`shish')
+                                stickyForm
+                                    ? t(`Saqlash`)
+                                    : t('Yangi mijoz qo`shish')
                             }
                             onClick={stickyForm ? handleEdit : addNewClients}
                         />
@@ -358,6 +474,8 @@ const ClientsPage = () => {
                         headers={headers}
                         Edit={handleEditClients}
                         Delete={handleDeleteClient}
+                        Print={handlePrint}
+                        currencyType={currencyType}
                     />
                 )}
             </div>

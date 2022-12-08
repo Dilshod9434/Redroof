@@ -41,6 +41,8 @@ import {SavedOrdersTableRow} from './TableRows/SavedOrdersTableRow.js'
 import {RegisterIncomingOrdersTableRow} from './TableRows/RegisterIncomingOrdersTableRow.js'
 import {IncomingOrderProductsTableRow} from './TableRows/IncomingOrderProductsTableRow.js'
 import {ReceiveOrderProductsTableRow} from './TableRows/ReceiveOrderProductsTableRow.js'
+import {IncomesTableRow} from './TableRows/IncomesTableRow'
+import {IncomeNameTableRow} from './TableRows/IncomeNameTableRow'
 function Table({
     page,
     data,
@@ -264,6 +266,8 @@ function Table({
                         countPage={countPage}
                         Edit={Edit}
                         Delete={Delete}
+                        Print={Print}
+                        currencyType={currencyType}
                     />
                 )
             case 'packman':
@@ -383,6 +387,18 @@ function Table({
                         countPage={countPage}
                         Delete={Delete}
                         reports={reports}
+                    />
+                )
+            case 'incomes':
+                return (
+                    <IncomesTableRow
+                        data={data}
+                        currency={currency}
+                        currentPage={currentPage}
+                        countPage={countPage}
+                        Delete={Delete}
+                        Edit={Edit}
+                        type={type}
                     />
                 )
             case 'barcode':
@@ -518,6 +534,14 @@ function Table({
                         currentPage={currentPage}
                         countPage={countPage}
                         handlePrint={Print}
+                    />
+                )
+            case 'incomeName':
+                return (
+                    <IncomeNameTableRow
+                        Delete={Delete}
+                        data={data}
+                        Edit={Edit}
                     />
                 )
             default:

@@ -74,6 +74,20 @@ const RegisterOrdersSend = lazy(() =>
     import('./Orders/SendingOrders/Routes/Orders.js')
 )
 
+const IncomeConsumption = lazy(() =>
+    import('./Income_Consumption/IncomeConsumption.js')
+)
+
+const Income = lazy(() => import('./Income_Consumption/Income.js'))
+
+const Consumption = lazy(() => import('./Income_Consumption/Consumption.js'))
+const IncomeConsumptionName = lazy(() =>
+    import('./Income_Consumption/IncomeConsumptionName.js')
+)
+const TotalIncomeConsumption = lazy(() =>
+    import('./Income_Consumption/TotalIncomeConsumption.js')
+)
+
 // <-- pages
 
 const directorRoutes = [
@@ -200,6 +214,26 @@ const directorRoutes = [
     {
         path: '/kassa/:id',
         element: <ReportPage />,
+    },
+    {
+        path: '/income_consumption',
+        element: <IncomeConsumption />,
+    },
+    {
+        path: '/income_consumption/income',
+        element: <Income />,
+    },
+    {
+        path: '/income_consumption/consumption',
+        element: <Consumption />,
+    },
+    {
+        path: '/income_consumption/name',
+        element: <IncomeConsumptionName />,
+    },
+    {
+        path: '/income_consumption/total',
+        element: <TotalIncomeConsumption />,
     },
     {
         path: '/dukonlar/filiallar/*',

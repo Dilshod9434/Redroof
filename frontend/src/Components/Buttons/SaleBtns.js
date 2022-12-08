@@ -47,6 +47,17 @@ export const DiscountBtn = ({onClick, text}) => {
     )
 }
 
+export const PrepaymentBtn = ({onClick, text}) => {
+    return (
+        <button
+            onClick={onClick}
+            className='discountstyle w-full h-[3.25rem] bg-blue-500 text-white-900 duration-200 shadow-lg'
+        >
+            {text}
+        </button>
+    )
+}
+
 export const Payment = ({onClick, text, onDoubleClick}) => {
     return (
         <button

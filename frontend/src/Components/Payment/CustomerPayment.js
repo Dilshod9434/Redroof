@@ -1,9 +1,15 @@
-import {IoPerson} from 'react-icons/io5'
-import {DiscountBtn, Payment, SaleBtn} from '../Buttons/SaleBtns.js'
+import {IoCheckmark, IoPerson} from 'react-icons/io5'
+import {
+    DiscountBtn,
+    Payment,
+    PrepaymentBtn,
+    SaleBtn,
+} from '../Buttons/SaleBtns.js'
 import {DiscountInput} from '../Inputs/DiscountInputs.js'
 import {useSelector} from 'react-redux'
 import PaymentInput from './PaymentInput/PaymentInput.js'
 import {t} from 'i18next'
+import Checkbox from '../Checkbox/Checkbox.js'
 
 function CustomerPayment({
     returned,
@@ -30,6 +36,9 @@ function CustomerPayment({
     saleComment,
     changeComment,
     onDoubleClick,
+    isPrepayment,
+    handlePrepayment,
+    clientValue,
 }) {
     const defineLabel = () => {
         switch (type) {
@@ -163,6 +172,33 @@ function CustomerPayment({
                                 {paid.toLocaleString('ru-Ru')} {currencyType}
                             </h3>
                         </li>
+                        {clientValue && clientValue?.value && (
+                            <li className={'checkbox mb-[1rem]'}>
+                                <input
+                                    type='checkbox'
+                                    className={'hidden'}
+                                    id={'prepayment'}
+                                    onChange={handlePrepayment}
+                                    checked={isPrepayment}
+                                    value={isPrepayment}
+                                />
+                                <label
+                                    htmlFor={'prepayment'}
+                                    className='transition-all duration-100 block w-[1.1rem] h-[1.1rem] rounded-[0.25rem] bg-white-900 border border-black-200 cursor-pointer relative'
+                                >
+                                    <span className={'checkbox-icon'}>
+                                        <IoCheckmark size={'1rem'} />
+                                    </span>
+                                </label>
+                                <span
+                                    className={
+                                        'transition-all duration-100 grow text-base text-black-700 leading-[1.125rem] ml-[0.625rem]'
+                                    }
+                                >
+                                    Oldindan tulov
+                                </span>
+                            </li>
+                        )}
                     </ul>
                 </div>
                 <div className='bottom-payment w-full flex flex-col gap-[1.25rem] border-t-[1px] border-black-200 pt-[1.25rem]'>
