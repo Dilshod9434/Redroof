@@ -83,6 +83,18 @@ export const returnSaleProducts = createAsyncThunk(
     }
 )
 
+export const createExpenseProduct = createAsyncThunk(
+    'expenseProduct/create',
+    async (body = {}, {rejectWithValue}) => {
+        try {
+            const {data} = await Api.post('/expense_product/create', body)
+            return data
+        } catch (error) {
+            rejectWithValue(error)
+        }
+    }
+)
+
 const registerSellingSlice = createSlice({
     name: 'registerSelling',
     initialState: {
@@ -180,6 +192,17 @@ const registerSellingSlice = createSlice({
             state.loadingMakePayment = false
             state.errorMakePayment = payload
             state.errorMakePayment = null
+        },
+        [createExpenseProduct.pending]: (state) => {
+            state.loading = true
+        },
+        [createExpenseProduct.fulfilled]: (state, {payload}) => {
+            state.loading = false
+            universalToast(`${payload?.message}`, 'success')
+        },
+        [createExpenseProduct.rejected]: (state, {payload}) => {
+            state.loading = false
+            universalToast(`${payload}`, 'error')
         },
     },
 })

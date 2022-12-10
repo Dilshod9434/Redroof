@@ -10,6 +10,7 @@ import Spinner from '../../../Components/Spinner/SmallLoader.js'
 import SmallLoader from '../../../Components/Spinner/SmallLoader.js'
 import {
     addPayment,
+    createExpenseProduct,
     getClients,
     makePayment,
     returnSaleProducts,
@@ -263,6 +264,7 @@ const RegisterSelling = () => {
                     setPaid(all)
                     setPaidUzs(allUzs)
                 } else {
+                    console.log('work')
                     warningMorePayment()
                 }
             } else if (type === 'card') {
@@ -627,7 +629,7 @@ const RegisterSelling = () => {
             }
         )
     }
-
+    console.log(tableProducts)
     const handleApproveReturn = () => {
         handleClosePay()
         const body = {
@@ -1421,8 +1423,6 @@ const RegisterSelling = () => {
             setIsPrepayment(val)
             handleChangePaymentType('mixed')
             const {prepayment, prepaymentuzs} = calcPrepayment()
-            setAllPayment(prepayment)
-            setAllPaymentUzs(prepaymentuzs)
             if (clientValue.prepaymentType === 'cash') {
                 setPaymentCash(prepayment)
                 setPaymentCashUzs(prepaymentuzs)
@@ -1448,6 +1448,28 @@ const RegisterSelling = () => {
                 setPaymentDebtUzs(0)
             }
         }
+    }
+
+    const handleCreateExpenseProduct = (e) => {
+        e.preventDefault()
+        const sendProducts = tableProducts.map((product) => ({
+            name: product.product?.name,
+            code: product.product?.code,
+            productId: product?.product._id,
+            price: product?.incomingprice,
+            priceuzs: product?.incomingpriceuzs,
+            total: product?.pieces,
+        }))
+        const body = {
+            expenseProducts: sendProducts,
+            market: market._id,
+        }
+
+        dispatch(createExpenseProduct(body)).then(({error}) => {
+            if (!error) {
+                clearAll()
+            }
+        })
     }
 
     return (
@@ -1626,6 +1648,17 @@ const RegisterSelling = () => {
                         />
                     )}
                 </div>
+                {tableProducts.length > 0 && (
+                    <div className='flex justify-end w-full pr-[20px]'>
+                        <button
+                            onClick={handleCreateExpenseProduct}
+                            className='bg-blue-500 flex items-center gap-[2px] rounded py-[6px] px-[12px]'
+                        >
+                            <span className='text-white-900'>Xarajat</span>
+                            <IoAdd color='#fff' size={16} />
+                        </button>
+                    </div>
+                )}
             </div>
             <div className='register-selling-right min-w-[20.25rem] bg-white-400 backdrop-blur-[3.125rem] rounded-[0.25rem] flex flex-col gap-[1.25rem]'>
                 <div className='flex flex-col grow gap-[1.25rem]'>

@@ -21,4 +21,5 @@ module.exports.routers = (app) => {
   app.use('/api/expense', require('./expense/expense.route'));
   app.use('/api/barcode', require('./barcode/barcode.route'));
   app.use('/api', require('./income_consumption/income_consumption.route'));
+  app.use('/api', require('./expenseProduct/expenseProduct.route'));
 };

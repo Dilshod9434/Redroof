@@ -62,6 +62,13 @@ const navListForDirector = [
             },
             {
                 id: 6,
+                label: 'Maxsulotlar xarajati',
+                icon: '',
+                path: 'mahsulotlar/xarajatlar',
+                submenu: false,
+            },
+            {
+                id: 7,
                 label: 'Maxsulotlar hisoboti',
                 icon: 'home',
                 path: 'maxsulotlar/hisobot',
@@ -81,7 +88,7 @@ const navListForDirector = [
                 ],
             },
             {
-                id: 7,
+                id: 8,
                 label: 'Inventarizatsiya',
                 icon: true,
                 path: 'maxsulotlar/inventarizatsiya',

@@ -43,6 +43,7 @@ import {IncomingOrderProductsTableRow} from './TableRows/IncomingOrderProductsTa
 import {ReceiveOrderProductsTableRow} from './TableRows/ReceiveOrderProductsTableRow.js'
 import {IncomesTableRow} from './TableRows/IncomesTableRow'
 import {IncomeNameTableRow} from './TableRows/IncomeNameTableRow'
+import {ExpenseProductTableRow} from './TableRows/ExpenseProductsTableRow'
 function Table({
     page,
     data,
@@ -534,6 +535,16 @@ function Table({
                         currentPage={currentPage}
                         countPage={countPage}
                         handlePrint={Print}
+                    />
+                )
+            case 'expenseProducts':
+                return (
+                    <ExpenseProductTableRow
+                        data={data}
+                        currentPage={currentPage}
+                        countPage={countPage}
+                        Print={Print}
+                        Delete={Delete}
                     />
                 )
             case 'incomeName':

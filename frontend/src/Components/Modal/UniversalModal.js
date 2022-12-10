@@ -20,6 +20,7 @@ import RequestApplication from './ModalBodys/ReuqestApplication.js'
 import SendingApplication from './ModalBodys/SendingApplication.js'
 import {SavedOrdersCheck} from '../OrdersCheck/SavedOrdersCheck.js'
 import DebtComment from './ModalBodys/DebtComment'
+import ExpenseProductsCheck from './ModalBodys/ExpenseProductsCheck'
 function UniversalModal({
     isOpen,
     toggleModal,
@@ -202,6 +203,8 @@ function UniversalModal({
                 )
             case 'debtcomment':
                 return <DebtComment toggleModal={toggleModal} />
+            case 'expenseProducts':
+                return <ExpenseProductsCheck products={product} />
             default:
                 return t('Bunday jadval topilmadi')
         }

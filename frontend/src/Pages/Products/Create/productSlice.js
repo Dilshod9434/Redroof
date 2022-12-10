@@ -117,10 +117,25 @@ export const getCodeOfCategory = createAsyncThunk(
     }
 )
 
+export const getExpenseProducts = createAsyncThunk(
+    'expenseProducts/get',
+    async (body = {}, {rejectWithValue}) => {
+        try {
+            const {data} = await Api.get('/expense_product/get', {
+                params: body,
+            })
+            return data
+        } catch (error) {
+            rejectWithValue(error)
+        }
+    }
+)
+
 const productSlice = createSlice({
     name: 'products',
     initialState: {
         products: [],
+        productExpense: null,
         lastProductCode: null,
         allProducts: [],
         searchedProducts: [],
@@ -271,6 +286,17 @@ const productSlice = createSlice({
             state.loading = false
             state.errorProducts = payload
             universalToast(payload, 'error')
+        },
+        [getExpenseProducts.pending]: (state) => {
+            state.loading = true
+        },
+        [getExpenseProducts.fulfilled]: (state, {payload}) => {
+            state.loading = false
+            state.productExpense = payload
+        },
+        [getExpenseProducts.rejected]: (state, {payload}) => {
+            state.loading = false
+            universalToast(`${payload}`, 'error')
         },
     },
 })

@@ -353,15 +353,13 @@ module.exports.addproducts = async (req, res) => {
         product: product._id,
       });
 
-      const produc = await Product.findById(product._id).populate(
-        'productdata',
-        'name'
-      );
-      if (produc.total < pieces) {
+      const produc = await getProduct(saleproduct, market);
+      if (product._id && produc.total < pieces) {
         return res.status(400).json({
           error: `Diqqat! ${produc.productdata.name} mahsuloti omborda yetarlicha mavjud emas. Qolgan mahsulot soni ${produc.total} ta`,
         });
       }
+
       if (error) {
         return res.status(400).json({
           error: error.message,
@@ -370,16 +368,16 @@ module.exports.addproducts = async (req, res) => {
 
       const newSaleProduct = new SaleProduct({
         price: produc.price,
-        totalprice,
-        totalpriceuzs,
-        unitprice,
-        unitpriceuzs,
+        totalprice: convertToUsd(totalprice),
+        totalpriceuzs: convertToUzs(totalpriceuzs),
+        unitprice: convertToUsd(unitprice),
+        unitpriceuzs: convertToUzs(unitpriceuzs),
         pieces,
-        product: product._id,
+        product: produc._id,
         market,
         user,
-        previous: produc.total,
-        next: produc.total - Number(pieces),
+        previous: produc.total || 1,
+        next: produc.total - Number(pieces) || 1,
       });
 
       all.push(newSaleProduct);
@@ -513,10 +511,15 @@ module.exports.addproducts = async (req, res) => {
 
     if (isPrepayment) {
       const clientValue = await Client.findById(client._id);
-      clientValue.prepayment =
-        clientValue.prepayment - payment[`${prepaymentType}`];
-      clientValue.prepaymentuzs =
-        clientValue.prepaymentuzs - payment[`${prepaymentType + 'uzs'}`];
+      if (clientValue.prepayment <= payment[`${prepaymentType}`]) {
+        clientValue.prepayment = 0;
+        clientValue.prepaymentuzs = 0;
+      } else {
+        clientValue.prepayment =
+          clientValue.prepayment - payment[`${prepaymentType}`];
+        clientValue.prepaymentuzs =
+          clientValue.prepaymentuzs - payment[`${prepaymentType + 'uzs'}`];
+      }
       await clientValue.save();
     }
 
