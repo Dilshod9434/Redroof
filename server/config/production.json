@@ -2,5 +2,5 @@
   "PORT": 80,
   "mongoUri": "mongodb://localhost/market",
   "jwtSecret": "market",
-  "baseUrl": "http://80.89.239.33:80"
+  "baseUrl": "http://45.12.215.154:80"
 }
