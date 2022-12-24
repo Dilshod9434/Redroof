@@ -594,7 +594,7 @@ module.exports.getsaleconnectors = async (req, res) => {
         $lt: endDate,
       },
     })
-      .select('-isArchive -updatedAt -market -__v')
+      .select('-isArchive -market -__v')
       .sort({ updatedAt: -1 })
       .populate({
         path: 'products',
@@ -602,6 +602,15 @@ module.exports.getsaleconnectors = async (req, res) => {
         populate: {
           path: 'user',
           select: 'firstname lastname',
+        },
+      })
+      .populate({
+        path: 'products',
+        select: 'product',
+        populate: {
+          path: 'product',
+          select: 'category',
+          populate: { path: 'category', select: 'code' },
         },
       })
       .populate({
@@ -615,9 +624,19 @@ module.exports.getsaleconnectors = async (req, res) => {
           populate: { path: 'productdata', select: 'name code' },
         },
       })
+      .populate({
+        path: 'products',
+        select:
+          'totalprice unitprice totalpriceuzs unitpriceuzs pieces createdAt discount saleproducts product',
+        options: { sort: { createdAt: -1 } },
+        populate: {
+          path: 'saleproducts',
+          select: 'pieces totalprice totalpriceuzs',
+        },
+      })
       .populate(
         'payments',
-        'payment paymentuzs comment totalprice totalpriceuzs'
+        'payment paymentuzs comment totalprice totalpriceuzs createdAt'
       )
       .populate(
         'discounts',
@@ -627,6 +646,7 @@ module.exports.getsaleconnectors = async (req, res) => {
       .populate('packman', 'name')
       .populate('user', 'firstname lastname')
       .populate('dailyconnectors', 'comment')
+      .lean()
       .then((connectors) => {
         return filter(
           connectors,
