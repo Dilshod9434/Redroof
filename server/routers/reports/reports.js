@@ -183,13 +183,13 @@ module.exports.getReport = async (req, res) => {
 
     reports.income.income = roundUsd(
       Number(reports.sale.sale) -
-        Number(incomingprice) -
-        Number(reports.discounts.discounts)
+      Number(incomingprice) -
+      Number(reports.discounts.discounts)
     );
     reports.income.incomeuzs = roundUzs(
       Number(reports.sale.saleuzs) -
-        Number(incomingpriceuzs) -
-        Number(reports.discounts.discountsuzs)
+      Number(incomingpriceuzs) -
+      Number(reports.discounts.discountsuzs)
     );
 
     // Get debts report functions  START
@@ -250,7 +250,6 @@ module.exports.getReport = async (req, res) => {
 
     res.status(201).send(reports);
   } catch (error) {
-    console.log(error);
     res.status(400).json({ error: 'Serverda xatolik yuz berdi...' });
   }
 };
@@ -780,7 +779,6 @@ module.exports.getProductsReport = async (req, res) => {
 
     const products = await Product.find({
       market,
-      isFree: { $ne: true },
     })
       .select('total price')
       .populate('price', 'incomingprice incomingpriceuzs');
@@ -794,14 +792,13 @@ module.exports.getProductsReport = async (req, res) => {
 
     products.map((product) => {
       productsreport.totalpieces += product.total;
-      productsreport.totalprice += product.price.incomingprice;
-      productsreport.totalpriceuzs += product.price.incomingpriceuzs;
+      productsreport.totalprice +=
+        (Math.round(Number(product.price.incomingprice) * 1000) / 1000) *
+        Math.round(product.total);
+      productsreport.totalpriceuzs +=
+        (Math.round(Number(product.price.incomingpriceuzs) * 1) / 1) *
+        Math.round(product.total);
     });
-
-    productsreport.totalprice =
-      Math.round(productsreport.totalprice * 1000) / 1000;
-    productsreport.totalpriceuzs =
-      Math.round(productsreport.totalpriceuzs * 1) / 1;
 
     res.status(200).json(productsreport);
   } catch (error) {

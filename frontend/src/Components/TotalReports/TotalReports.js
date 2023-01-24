@@ -7,6 +7,7 @@ import {useRef} from 'react'
 import {useReactToPrint} from 'react-to-print'
 import {useEffect} from 'react'
 import {useState} from 'react'
+import {roundUsd, roundUzs} from '../../App/globalFunctions'
 
 const TotalReports = ({
     totalreports,
@@ -197,19 +198,11 @@ const TotalReports = ({
                     number2={Math.round(productreport?.totalpieces)}
                     number3={
                         currencyType === 'USD'
-                            ? (
-                                  Math.round(
-                                      productreport?.totalprice *
-                                          productreport.totalpieces *
-                                          1000
-                                  ) / 1000
+                            ? roundUsd(
+                                  productreport?.totalprice
                               ).toLocaleString('ru-RU')
-                            : (
-                                  Math.round(
-                                      productreport?.totalpriceuzs *
-                                          productreport.totalpieces *
-                                          1
-                                  ) / 1
+                            : roundUzs(
+                                  productreport?.totalpriceuzs
                               ).toLocaleString('ru-RU')
                     }
                     text1={'Tovar turlarining umumiy soni'}
