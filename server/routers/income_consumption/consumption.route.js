@@ -9,6 +9,7 @@ require('../../models/Income_Consumption/Income');
 module.exports.create = async (req, res) => {
   try {
     const consumption = req.body;
+    console.log(consumption);
     const marke = await Market.findById(consumption.market);
     if (!marke) {
       return res.status(400).json({

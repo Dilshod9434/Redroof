@@ -119,13 +119,13 @@ const Consumption = () => {
         setComment('')
     }
 
-    const handleCreateIncome = (e) => {
-        e.preventDefault()
+    const handleCreateIncome = () => {
+
         if (!checkIncome()) {
             if (!incomeId) {
                 dispatch(
                     createConsumption({
-                        incomeName: incomeName.value,
+                        incomeName: incomeName._id,
                         totalprice: incomeSumm,
                         totalpriceuzs: incomeSummUzs,
                         type: incomeType.value,
@@ -142,7 +142,7 @@ const Consumption = () => {
                 dispatch(
                     updateConsumption({
                         _id: incomeId,
-                        incomeName: incomeName.value,
+                        incomeName: incomeName._id,
                         totalprice: incomeSumm,
                         totalpriceuzs: incomeSummUzs,
                         type: incomeType.value,
@@ -217,7 +217,7 @@ const Consumption = () => {
                 currentPage: currentPage,
                 countPage: countPage,
                 market: _id,
-                incomeName: incomeNameSearch,
+                incomeName: incomeNameSearch?.name,
             })
         )
     }, [
@@ -238,8 +238,10 @@ const Consumption = () => {
         if (incomeNames && incomeNames.length > 0) {
             setIncomeNamesOption([
                 ...incomeNames.map((el) => ({
+                    _id: el._id,
                     label: el.name,
                     value: el.name,
+                    name: el.name,
                 })),
             ])
         }
@@ -306,8 +308,8 @@ const Consumption = () => {
                 </div>
                 <div className={'flex gap-[1.25rem] w-[19.5rem]'}>
                     <Button
-                        onClick={handleCreateIncome}
-                        add={handleCreateIncome}
+                        onClick={() => handleCreateIncome()}
+                        add={() => handleCreateIncome()}
                         text={t('Yangi chiqim yaratish')}
                     />
                     <Button onClick={clearForm} text={t('Tozalash')} />
@@ -358,10 +360,11 @@ const Consumption = () => {
                             {
                                 label: 'Xammasi',
                                 value: null,
+                                name: ""
                             },
                             ...incomeNamesOption,
                         ]}
-                        onChange={(e) => setIncomeNameSearch(e.value)}
+                        onChange={(e) => setIncomeNameSearch(e)}
                     />
                 </div>
             </div>
