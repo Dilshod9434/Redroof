@@ -105,18 +105,11 @@ const Reports = () => {
             ).toISOString(),
             endDate: endDate,
         }
-        let bodyTotal = {
-            startDate: new Date(
-                new Date().setMonth(new Date().getMonth() - 1)
-            ).toISOString(),
-            endDate: new Date(),
-        }
-
         dispatch(getReports(body))
         dispatch(getProducts())
-        dispatch(getIncomings(bodyTotal))
-        dispatch(getReportsForTotal(bodyTotal))
-        dispatch(getSaleProducts(bodyTotal))
+        dispatch(getIncomings(body))
+        dispatch(getReportsForTotal(body))
+        dispatch(getSaleProducts(body))
     }, [dispatch, startDate, endDate])
     useEffect(() => {
         if (errorReports) {
