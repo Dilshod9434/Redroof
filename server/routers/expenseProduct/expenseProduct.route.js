@@ -10,4 +10,8 @@ router.get('/expense_product/get', authMiddleware, (req, res) => {
   require('./expenseProduct').getExpenseProducts(req, res);
 });
 
+router.post('/expense_product/delete', authMiddleware, (req, res) => {
+  require('./expenseProduct').delete(req, res);
+});
+
 module.exports = router;

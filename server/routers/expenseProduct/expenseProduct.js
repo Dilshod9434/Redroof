@@ -99,3 +99,31 @@ module.exports.getExpenseProducts = async (req, res) => {
     res.status(501).json({ error: 'Serverda xatolik yuz berdi...' });
   }
 };
+
+module.exports.delete = async (req, res) => {
+  try {
+    const { expenseproduct, market } = req.body;
+
+    const marke = await Market.findById(market);
+    if (!marke) {
+      return res.status(400).json({
+        message: `Diqqat! Do'kon haqida malumotlar topilmadi.`,
+      });
+    }
+
+    for (const product of expenseproduct.products) {
+      const prod = await Product.findById(product.product)
+
+      prod.total = prod.total + product.total;
+      await prod.save()
+      await ExpenseProduct.findByIdAndDelete(product._id)
+    }
+
+    res.status(200).json({
+      message: "Mahsulot xarajati o'chirildi!"
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(501).json({ error: 'Serverda xatolik yuz berdi...' });
+  }
+}

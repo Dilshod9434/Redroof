@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import FieldContainer from '../../Components/FieldContainer/FieldContainer'
 import Button from '../../Components/Buttons/BtnAddRemove'
 import SearchForm from '../../Components/SearchForm/SearchForm'
 import Pagination from '../../Components/Pagination/Pagination'
 import Table from '../../Components/Table/Table'
-import {universalToast} from '../../Components/ToastMessages/ToastMessages'
-import {useTranslation} from 'react-i18next'
-import {UsdToUzs, UzsToUsd} from './../../App/globalFunctions'
+import { universalToast } from '../../Components/ToastMessages/ToastMessages'
+import { useTranslation } from 'react-i18next'
+import { UsdToUzs, UzsToUsd } from './../../App/globalFunctions'
 import {
     changeEndDate,
     changeStartDate,
@@ -17,19 +17,19 @@ import {
     getIncomeNames,
     updateConsumption,
 } from './incomeConsumptionSlice'
-import {BiPlus} from 'react-icons/bi'
+import { BiPlus } from 'react-icons/bi'
 import UniversalModal from '../../Components/Modal/UniversalModal'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const Consumption = () => {
-    const {t} = useTranslation(['common'])
+    const { t } = useTranslation(['common'])
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const {
-        market: {_id},
+        market: { _id },
     } = useSelector((state) => state.login)
-    const {currencyType, currency} = useSelector((state) => state.currency)
-    const {consumptions, consumptionsCount, incomeNames, startDate, endDate} =
+    const { currencyType, currency } = useSelector((state) => state.currency)
+    const { consumptions, consumptionsCount, incomeNames, startDate, endDate } =
         useSelector((state) => state.income_consumption)
     const [currentPage, setCurrentPage] = useState(0)
     const [countPage, setCountPage] = useState(10)
@@ -131,7 +131,7 @@ const Consumption = () => {
                         type: incomeType.value,
                         comment: comment,
                     })
-                ).then(({error}) => {
+                ).then(({ error }) => {
                     if (!error) {
                         universalToast('Chiqim yaratildi!', 'success')
                         clearForm()
@@ -148,7 +148,7 @@ const Consumption = () => {
                         type: incomeType.value,
                         comment: comment,
                     })
-                ).then(({error}) => {
+                ).then(({ error }) => {
                     if (!error) {
                         universalToast('Chiqim uzgardi!', 'success')
                         clearForm()
@@ -171,7 +171,7 @@ const Consumption = () => {
     }
 
     const handleClickApproveToDelete = () => {
-        dispatch(deleteConsumption(incomeId)).then(({error}) => {
+        dispatch(deleteConsumption(incomeId)).then(({ error }) => {
             if (!error) {
                 setIncomeId(null)
                 toggleModal()
@@ -217,7 +217,7 @@ const Consumption = () => {
                 currentPage: currentPage,
                 countPage: countPage,
                 market: _id,
-                incomeName: incomeNameSearch?.value,
+                incomeName: incomeNameSearch,
             })
         )
     }, [
@@ -239,7 +239,7 @@ const Consumption = () => {
             setIncomeNamesOption([
                 ...incomeNames.map((el) => ({
                     label: el.name,
-                    value: el._id,
+                    value: el.name,
                 })),
             ])
         }
@@ -256,7 +256,7 @@ const Consumption = () => {
                     maxWidth={'w-[21.75rem]'}
                     type={'number'}
                     border={true}
-                    // onKeyUp={onKeyCreate}
+                // onKeyUp={onKeyCreate}
                 />
                 <FieldContainer
                     value={incomeName}
@@ -267,7 +267,7 @@ const Consumption = () => {
                     options={incomeNamesOption}
                     border={true}
                     select={true}
-                    // onKeyUp={onKeyCreate}
+                // onKeyUp={onKeyCreate}
                 />
                 <FieldContainer
                     value={incomeType}
@@ -277,7 +277,7 @@ const Consumption = () => {
                     select={true}
                     options={types}
                     maxWidth={'w-[21rem]'}
-                    // onKeyUp={onKeyCreate}
+                // onKeyUp={onKeyCreate}
                 />
             </div>
             <div className='pl-[2.5rem]'>
@@ -287,7 +287,7 @@ const Consumption = () => {
                     label={t('Izoh')}
                     placeholder={t('misol: soliq uchun')}
                     maxWidth={'w-[21rem]'}
-                    // onKeyUp={onKeyCreate}
+                // onKeyUp={onKeyCreate}
                 />
             </div>
             <div className='mainPadding flex justify-between'>
@@ -333,10 +333,10 @@ const Consumption = () => {
                 <SearchForm
                     filterBy={['total', 'startDate', 'endDate']}
                     setStartDate={(e) =>
-                        dispatch(changeStartDate({start: e.toISOString()}))
+                        dispatch(changeStartDate({ start: e.toISOString() }))
                     }
                     setEndDate={(e) =>
-                        dispatch(changeEndDate({end: e.toISOString()}))
+                        dispatch(changeEndDate({ end: e.toISOString() }))
                     }
                     filterByTotal={(e) => setCountPage(e.value)}
                     startDate={new Date(startDate)}
@@ -361,15 +361,14 @@ const Consumption = () => {
                             },
                             ...incomeNamesOption,
                         ]}
-                        value={incomeNameSearch}
-                        onChange={(e) => setIncomeNameSearch(e)}
+                        onChange={(e) => setIncomeNameSearch(e.value)}
                     />
                 </div>
             </div>
             {consumptions && (
                 <div className='tableContainerPadding'>
                     <Table
-                        page={'incomes'}
+                        page={'consumption'}
                         headers={headers}
                         data={consumptions}
                         reports={false}

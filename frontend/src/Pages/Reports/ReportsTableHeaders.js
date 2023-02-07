@@ -1,3 +1,5 @@
+import { t } from "i18next"
+
 export const ReportsTableHeaders = (header) => {
     let paymenttype =
         (header === 'cash' && 'Naqt') ||
@@ -10,31 +12,31 @@ export const ReportsTableHeaders = (header) => {
                 title: '№',
             },
             {
-                title: 'Sana',
+                title: t('Sana'),
                 filter: 'createdAt',
             },
             {
-                title: 'ID',
-                filter: 'saleconnector.id',
+                title: t('ID'),
+                filter: 'id',
             },
             {
-                title: 'Mijoz',
-                filter: 'client',
+                title: t('Mijoz'),
             },
             {
-                title: 'Sotuv',
+                title: t('Jami'),
             },
             {
-                title: 'Naqt',
+                title: "To'langan",
             },
             {
-                title: 'Plastic',
+                title: t('Qarz'),
             },
             {
-                title: "O'tkazma",
+                title: t('Izoh'),
             },
             {
                 title: '',
+                styles: 'w-[7rem]',
             },
         ],
         income: [
@@ -61,6 +63,9 @@ export const ReportsTableHeaders = (header) => {
             {
                 title: 'Foyda',
             },
+            {
+                title: '',
+            }
         ],
         debts: [
             {
@@ -86,6 +91,9 @@ export const ReportsTableHeaders = (header) => {
             },
             {
                 title: 'Qarz',
+            },
+            {
+                title: 'Jami qarz',
             },
             {
                 title: '',
@@ -177,19 +185,77 @@ export const ReportsTableHeaders = (header) => {
                 filter: 'saleconnector.id',
             },
             {
-                title: 'Mijoz',
-                filter: 'client',
+                title: 'Mijoz'
             },
             {
-                title: 'Sotuv',
+                title: 'Naqt',
             },
             {
-                title: paymenttype,
+                title: 'Plastik',
+            },
+            {
+                title: "O'tkazma",
+            },
+            {
+                title: "Qarzdan to'lov",
+            },
+            {
+                title: "Qaytarilgan",
+            },
+            {
+                title: "",
             },
         ],
+        incoming: [
+            {
+                title: '№',
+            },
+            {
+                title: 'Sana',
+                filter: 'createdAt',
+            },
+            {
+                title: "Nomi"
+            },
+            {
+                title: "Soni"
+            },
+            {
+                title: 'Narxi',
+            },
+            {
+                title: "Jami"
+            },
+        ],
+        consumption: [
+            {
+                title: '№',
+                styles: 'w-[7%]',
+            },
+            {
+                title: t('Sana'),
+                styles: 'w-[10%]',
+                filter: 'createdAt',
+            },
+            {
+                title: t('Summa'),
+                styles: 'w-[20%]',
+            },
+            {
+                title: t('Nomi'),
+            },
+            {
+                title: t('Izoh'),
+            },
+            {
+                title: t('Turi'),
+            }
+        ]
     }
 
-    return header === 'cash' || header === 'card' || header === 'transfer'
-        ? headers.payments
-        : headers[`${header}`]
+    // return header === 'cash' || header === 'card' || header === 'transfer'
+    //     ? headers.payments
+    //     : headers[`${header}`]
+
+    return headers[`${header}`]
 }

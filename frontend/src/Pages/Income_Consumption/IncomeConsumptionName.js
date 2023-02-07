@@ -1,32 +1,33 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import FieldContainer from '../../Components/FieldContainer/FieldContainer.js'
 import Button from '../../Components/Buttons/BtnAddRemove.js'
 import Table from '../../Components/Table/Table.js'
-import {useDispatch, useSelector} from 'react-redux'
-import {motion} from 'framer-motion'
+import { useDispatch, useSelector } from 'react-redux'
+import { motion } from 'framer-motion'
 import UniversalModal from '../../Components/Modal/UniversalModal.js'
-import {universalToast} from '../../Components/ToastMessages/ToastMessages.js'
-import {useTranslation} from 'react-i18next'
+import { universalToast } from '../../Components/ToastMessages/ToastMessages.js'
+import { useTranslation } from 'react-i18next'
 import {
     createIncomeName,
     getIncomeNames,
     updateIncomeName,
-} from './incomeConsumptionSlice.js'
+} from './incomeConsumptionSlice.js';
+import Api from "../../Config/Api"
 
 const IncomeConsumptionName = () => {
-    const {t} = useTranslation(['common'])
+    const { t } = useTranslation(['common'])
     const dispatch = useDispatch()
     const {
-        market: {_id},
+        market: { _id },
     } = useSelector((state) => state.login)
 
-    const {incomeNames} = useSelector((state) => state.income_consumption)
+    const { incomeNames } = useSelector((state) => state.income_consumption)
 
     const headers = [
-        {title: '№', styles: 'w-[8%] text-left'},
-        {title: 'Sana', styles: 'w-[17%] text-center'},
-        {title: 'Nomi', styles: 'w-[67%] text-center'},
-        {title: '', styles: 'w-[8%] text-center'},
+        { title: '№', styles: 'w-[8%] text-left' },
+        { title: 'Sana', styles: 'w-[17%] text-center' },
+        { title: 'Nomi', styles: 'w-[67%] text-center' },
+        { title: '', styles: 'w-[8%] text-center' },
     ]
 
     const [name, setName] = useState('')
@@ -54,7 +55,7 @@ const IncomeConsumptionName = () => {
                 createIncomeName({
                     name: name,
                 })
-            ).then(({error}) => {
+            ).then(({ error }) => {
                 if (!error) {
                     universalToast('Nomi yaratildi!', 'success')
                     clearForm()
@@ -73,12 +74,23 @@ const IncomeConsumptionName = () => {
                     name: name,
                     _id: nameId,
                 })
-            ).then(({error}) => {
+            ).then(({ error }) => {
                 if (!error) {
                     universalToast("Nomi o'zgarildi!", 'success')
                     clearForm()
                 }
             })
+        }
+    }
+
+    const handleDelete = async (id) => {
+        try {
+            console.log(id);
+            const { data } = await Api.post(`/income_consumption_name/delete`, { id })
+            universalToast(data.message, 'success')
+            dispatch(getIncomeNames(_id))
+        } catch (error) {
+            universalToast(error, 'error')
         }
     }
 
@@ -93,6 +105,7 @@ const IncomeConsumptionName = () => {
         dispatch(getIncomeNames(_id))
     }, [dispatch, _id])
 
+
     return (
         <motion.section
             key='content'
@@ -100,10 +113,10 @@ const IncomeConsumptionName = () => {
             animate='open'
             exit='collapsed'
             variants={{
-                open: {opacity: 1, height: 'auto'},
-                collapsed: {opacity: 0, height: 0},
+                open: { opacity: 1, height: 'auto' },
+                collapsed: { opacity: 0, height: 0 },
             }}
-            transition={{duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98]}}
+            transition={{ duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] }}
         >
             {/* <UniversalModal
                 headerText={''}
@@ -118,9 +131,8 @@ const IncomeConsumptionName = () => {
                 isOpen={modalVisible}
             /> */}
             <form
-                className={`unitFormStyle ${
-                    stickyForm && 'stickyForm'
-                } flex gap-[1.25rem] bg-background flex-col mainPadding transition ease-linear duration-200`}
+                className={`unitFormStyle ${stickyForm && 'stickyForm'
+                    } flex gap-[1.25rem] bg-background flex-col mainPadding transition ease-linear duration-200`}
             >
                 <div className='exchangerate-style'>
                     <FieldContainer
@@ -130,7 +142,7 @@ const IncomeConsumptionName = () => {
                         placeholder={t('misol: 11 000 UZS')}
                         maxWidth={'w-[30.75rem]'}
                         border={true}
-                        // onKeyPress={handleKeyUp}
+                    // onKeyPress={handleKeyUp}
                     />
                     <div
                         className={'w-full flex gap-[1.25rem] grow w-[33.2rem]'}
@@ -159,7 +171,7 @@ const IncomeConsumptionName = () => {
                         data={incomeNames}
                         headers={headers}
                         Edit={editName}
-                        // Delete={handleDeleteExchange}
+                        Delete={(id) => handleDelete(id)}
                     />
                 )}
             </div>

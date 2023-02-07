@@ -1,12 +1,12 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
-import {universalToast} from '../../Components/ToastMessages/ToastMessages'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { universalToast } from '../../Components/ToastMessages/ToastMessages'
 import Api from '../../Config/Api'
 
 export const getIncomes = createAsyncThunk(
     'income/get',
-    async (body = {}, {rejectWithValue}) => {
+    async (body = {}, { rejectWithValue }) => {
         try {
-            const {data} = await Api.get('/income/get', {
+            const { data } = await Api.get('/income/get', {
                 params: body,
             })
             return data
@@ -18,11 +18,9 @@ export const getIncomes = createAsyncThunk(
 
 export const getConsumption = createAsyncThunk(
     'consumption/get',
-    async (body = {}, {rejectWithValue}) => {
+    async (body = {}, { rejectWithValue }) => {
         try {
-            const {data} = await Api.get('/consumption/get', {
-                params: body,
-            })
+            const { data } = await Api.post('/consumption/get', body)
             return data
         } catch (error) {
             rejectWithValue(error)
@@ -32,9 +30,9 @@ export const getConsumption = createAsyncThunk(
 
 export const getIncomeNames = createAsyncThunk(
     'income/name',
-    async (market, {rejectWithValue}) => {
+    async (market, { rejectWithValue }) => {
         try {
-            const {data} = await Api.get(
+            const { data } = await Api.get(
                 `/income_consumption_name/get?market=${market}`
             )
             return data
@@ -46,9 +44,9 @@ export const getIncomeNames = createAsyncThunk(
 
 export const createIncome = createAsyncThunk(
     'income/create',
-    async (body = {}, {rejectWithValue}) => {
+    async (body = {}, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/income/create', body)
+            const { data } = await Api.post('/income/create', body)
             return data
         } catch (error) {
             rejectWithValue(error)
@@ -58,9 +56,9 @@ export const createIncome = createAsyncThunk(
 
 export const createIncomeName = createAsyncThunk(
     'income_name/create',
-    async (body = {}, {rejectWithValue}) => {
+    async (body = {}, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post(
+            const { data } = await Api.post(
                 '/income_consumption_name/create',
                 body
             )
@@ -73,9 +71,9 @@ export const createIncomeName = createAsyncThunk(
 
 export const createConsumption = createAsyncThunk(
     'consumption/create',
-    async (body = {}, {rejectWithValue}) => {
+    async (body = {}, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/consumption/create', body)
+            const { data } = await Api.post('/consumption/create', body)
             return data
         } catch (error) {
             rejectWithValue(error)
@@ -85,9 +83,9 @@ export const createConsumption = createAsyncThunk(
 
 export const updateIncome = createAsyncThunk(
     'income/update',
-    async (body = {}, {rejectWithValue}) => {
+    async (body = {}, { rejectWithValue }) => {
         try {
-            const {data} = await Api.put('/income/update', body)
+            const { data } = await Api.put('/income/update', body)
             return data
         } catch (error) {
             rejectWithValue(error)
@@ -97,9 +95,9 @@ export const updateIncome = createAsyncThunk(
 
 export const updateIncomeName = createAsyncThunk(
     'income_name/update',
-    async (body = {}, {rejectWithValue}) => {
+    async (body = {}, { rejectWithValue }) => {
         try {
-            const {data} = await Api.put(
+            const { data } = await Api.put(
                 '/income_consumption_name/update',
                 body
             )
@@ -112,9 +110,9 @@ export const updateIncomeName = createAsyncThunk(
 
 export const updateConsumption = createAsyncThunk(
     'consumption/update',
-    async (body = {}, {rejectWithValue}) => {
+    async (body = {}, { rejectWithValue }) => {
         try {
-            const {data} = await Api.put('/consumption/update', body)
+            const { data } = await Api.put('/consumption/update', body)
             return data
         } catch (error) {
             rejectWithValue(error)
@@ -124,9 +122,9 @@ export const updateConsumption = createAsyncThunk(
 
 export const deleteIncome = createAsyncThunk(
     'income/delete',
-    async (id, {rejectWithValue}) => {
+    async (id, { rejectWithValue }) => {
         try {
-            const {data} = await Api.delete(`/income/delete/${id}`)
+            const { data } = await Api.delete(`/income/delete/${id}`)
             return data
         } catch (error) {
             rejectWithValue(error)
@@ -136,9 +134,9 @@ export const deleteIncome = createAsyncThunk(
 
 export const deleteConsumption = createAsyncThunk(
     'consumption/delete',
-    async (id, {rejectWithValue}) => {
+    async (id, { rejectWithValue }) => {
         try {
-            const {data} = await Api.delete(`/consumption/delete/${id}`)
+            const { data } = await Api.delete(`/consumption/delete/${id}`)
             return data
         } catch (error) {
             rejectWithValue(error)
@@ -148,9 +146,9 @@ export const deleteConsumption = createAsyncThunk(
 
 export const getTotalIncomeConsumption = createAsyncThunk(
     'total/get',
-    async (body = {}, {rejectWithValue}) => {
+    async (body = {}, { rejectWithValue }) => {
         try {
-            const {data} = await Api.get('/income_consumption_total/get', {
+            const { data } = await Api.get('/income_consumption_total/get', {
                 params: body,
             })
             return data
@@ -190,10 +188,10 @@ const incomeConsumptionSlice = createSlice({
         clearError: (state) => {
             state.error = null
         },
-        changeStartDate: (state, {payload}) => {
+        changeStartDate: (state, { payload }) => {
             state.startDate = payload.start
         },
-        changeEndDate: (state, {payload}) => {
+        changeEndDate: (state, { payload }) => {
             state.endDate = payload.end
         },
     },
@@ -201,58 +199,57 @@ const incomeConsumptionSlice = createSlice({
         [getIncomes.pending]: (state) => {
             state.loading = true
         },
-        [getIncomes.fulfilled]: (state, {payload}) => {
+        [getIncomes.fulfilled]: (state, { payload }) => {
             state.incomesCount = payload.count
             state.totalIncomes = payload.totalprice
             state.totalIncomesUzs = payload.totalpriceuzs
             state.incomes = payload.incomes
             state.loading = false
         },
-        [getIncomes.rejected]: (state, {payload}) => {
+        [getIncomes.rejected]: (state, { payload }) => {
             universalToast(`${payload}`, 'error')
             state.loading = false
         },
         [getIncomeNames.pending]: (state) => {
             state.loading = true
         },
-        [getIncomeNames.fulfilled]: (state, {payload}) => {
+        [getIncomeNames.fulfilled]: (state, { payload }) => {
             state.incomeNames = payload
             state.loading = false
         },
-        [getIncomeNames.rejected]: (state, {payload}) => {
+        [getIncomeNames.rejected]: (state, { payload }) => {
             universalToast(`${payload}`, 'error')
             state.loading = false
         },
         [getConsumption.pending]: (state) => {
             state.loading = true
         },
-        [getConsumption.fulfilled]: (state, {payload}) => {
+        [getConsumption.fulfilled]: (state, { payload }) => {
             state.consumptionsCount = payload.count
             state.totalConsumptions = payload.totalprice
             state.totalConsumptionsUzs = payload.totalpriceuzs
             state.consumptions = payload.consumptions
             state.loading = false
         },
-        [getConsumption.rejected]: (state, {payload}) => {
+        [getConsumption.rejected]: (state, { payload }) => {
             universalToast(`${payload}`, 'error')
             state.loading = false
         },
         [getTotalIncomeConsumption.pending]: (state) => {
             state.loading = true
         },
-        [getTotalIncomeConsumption.fulfilled]: (state, {payload}) => {
+        [getTotalIncomeConsumption.fulfilled]: (state, { payload }) => {
             state.loading = false
             state.totalData = payload?.names
-            state.current = payload?.current
         },
-        [getTotalIncomeConsumption.rejected]: (state, {payload}) => {
+        [getTotalIncomeConsumption.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
         [createIncome.pending]: (state) => {
             state.loading = true
         },
-        [createIncome.fulfilled]: (state, {payload}) => {
+        [createIncome.fulfilled]: (state, { payload }) => {
             state.loading = false
             state.incomes = [payload, ...state.incomes]
             state.totalIncomes = state.totalIncomes + payload.totalprice
@@ -260,25 +257,25 @@ const incomeConsumptionSlice = createSlice({
                 state.totalIncomesUzs + payload.totalpriceuzs
             state.incomesCount = state.incomesCount + 1
         },
-        [createIncome.rejected]: (state, {payload}) => {
+        [createIncome.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
         [createIncomeName.pending]: (state) => {
             state.loading = true
         },
-        [createIncomeName.fulfilled]: (state, {payload}) => {
+        [createIncomeName.fulfilled]: (state, { payload }) => {
             state.loading = false
             state.incomeNames = [payload, ...state.incomeNames]
         },
-        [createIncomeName.rejected]: (state, {payload}) => {
+        [createIncomeName.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
         [createConsumption.pending]: (state) => {
             state.loading = true
         },
-        [createConsumption.fulfilled]: (state, {payload}) => {
+        [createConsumption.fulfilled]: (state, { payload }) => {
             state.loading = false
             state.consumptions = [payload, ...state.consumptions]
             state.totalConsumptions =
@@ -287,14 +284,14 @@ const incomeConsumptionSlice = createSlice({
                 state.totalConsumptionsUzs + payload.totalpriceuzs
             state.consumptionsCount = state.consumptionsCount + 1
         },
-        [createConsumption.rejected]: (state, {payload}) => {
+        [createConsumption.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
         [updateIncome.pending]: (state) => {
             state.loading = true
         },
-        [updateIncome.fulfilled]: (state, {payload}) => {
+        [updateIncome.fulfilled]: (state, { payload }) => {
             state.loading = false
             state.incomes = [
                 ...state.incomes.map((income) => {
@@ -306,14 +303,14 @@ const incomeConsumptionSlice = createSlice({
                 }),
             ]
         },
-        [updateIncome.rejected]: (state, {payload}) => {
+        [updateIncome.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
         [updateIncomeName.pending]: (state) => {
             state.loading = true
         },
-        [updateIncomeName.fulfilled]: (state, {payload}) => {
+        [updateIncomeName.fulfilled]: (state, { payload }) => {
             state.loading = false
             state.incomeNames = [
                 ...state.incomeNames.map((income) => {
@@ -325,14 +322,14 @@ const incomeConsumptionSlice = createSlice({
                 }),
             ]
         },
-        [updateIncomeName.rejected]: (state, {payload}) => {
+        [updateIncomeName.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
         [updateConsumption.pending]: (state) => {
             state.loading = true
         },
-        [updateConsumption.fulfilled]: (state, {payload}) => {
+        [updateConsumption.fulfilled]: (state, { payload }) => {
             state.loading = false
             state.consumptions = [
                 ...state.consumptions.map((consumption) => {
@@ -344,38 +341,38 @@ const incomeConsumptionSlice = createSlice({
                 }),
             ]
         },
-        [updateConsumption.rejected]: (state, {payload}) => {
+        [updateConsumption.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
         [deleteIncome.pending]: (state) => {
             state.loading = true
         },
-        [deleteIncome.fulfilled]: (state, {payload}) => {
+        [deleteIncome.fulfilled]: (state, { payload }) => {
             state.loading = false
             state.incomes = [
                 ...state.incomes.filter((income) => income._id !== payload),
             ]
         },
-        [deleteIncome.rejected]: (state, {payload}) => {
+        [deleteIncome.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
         [deleteConsumption.pending]: (state) => {
             state.loading = true
         },
-        [deleteConsumption.fulfilled]: (state, {payload}) => {
+        [deleteConsumption.fulfilled]: (state, { payload }) => {
             state.loading = false
             state.consumptions = [
                 ...state.consumptions.filter((cons) => cons._id !== payload),
             ]
         },
-        [deleteConsumption.rejected]: (state, {payload}) => {
+        [deleteConsumption.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
     },
 })
 
-export const {changeStartDate, changeEndDate} = incomeConsumptionSlice.actions
+export const { changeStartDate, changeEndDate } = incomeConsumptionSlice.actions
 export default incomeConsumptionSlice.reducer

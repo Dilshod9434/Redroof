@@ -1,30 +1,27 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const CheckoutCards = ({
-                           type,
-                           onClick,
-                           name,
-                           active,
-                           currency,
-                           report,
-                           path,
-                       }) => {
-    const chooseCardName = `cardContainer ${
-        type === 'sale' ||
+    type,
+    onClick,
+    name,
+    active,
+    currency,
+    report,
+    path,
+}) => {
+    const chooseCardName = `cardContainer ${type === 'sale' ||
         type === 'income' ||
-        type === 'cash' ||
-        type === 'card' ||
-        type === 'transfer'
-            ? 'tradeCard'
-            : type === 'expenses' || type === 'debts'
-                ? 'debts'
-                : type === 'backproducts'
-                    ? 'returnedCard'
-                    : type === 'discounts'
-                        ? 'discountCard'
-                        : ''
-    } ${active ? 'activeCard' : ''}`
+        type === 'payments'
+        ? 'tradeCard'
+        : type === 'expenses' || type === 'debts' || type === 'consumption'
+            ? 'debts'
+            : type === 'backproducts' || type === 'incoming'
+                ? 'returnedCard'
+                : type === 'discounts'
+                    ? 'discountCard'
+                    : ''
+        } ${active ? 'activeCard' : ''}`
 
     return (
         <Link to={`/kassa/${path}`} onClick={onClick}>

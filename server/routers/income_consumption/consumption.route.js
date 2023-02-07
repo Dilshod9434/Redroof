@@ -68,7 +68,7 @@ module.exports.delete = async (req, res) => {
 module.exports.get = async (req, res) => {
   try {
     const { currentPage, countPage, startDate, endDate, market, incomeName } =
-      req.query;
+      req.body;
 
     const marke = await Market.findById(market);
     if (!marke) {
@@ -92,7 +92,7 @@ module.exports.get = async (req, res) => {
         .populate({
           path: 'incomeName',
           select: 'name',
-          match: { _id: incomeName },
+          match: { name: incomeName },
         })
         .then((consumptions) =>
           filter(consumptions, (consumption) => consumption.incomeName)

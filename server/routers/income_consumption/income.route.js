@@ -4,6 +4,7 @@ const {
   IncomeName,
 } = require('../../models/Income_Consumption/Income');
 const { Market } = require('../../models/MarketAndBranch/Market');
+const { SaleProduct } = require('../../models/Sales/SaleProduct');
 
 module.exports.create = async (req, res) => {
   try {
@@ -69,7 +70,7 @@ module.exports.delete = async (req, res) => {
 module.exports.get = async (req, res) => {
   try {
     const { currentPage, countPage, startDate, endDate, market, incomeName } =
-      req.query;
+      req.body;
     const marke = await Market.findById(market);
     if (!marke) {
       return res.status(400).json({
@@ -77,10 +78,20 @@ module.exports.get = async (req, res) => {
       });
     }
 
+    const names = await IncomeName.find({
+      market
+    })
+      .select('-__v -isArchive -updatedAt')
+
+    const filterNames = names.reduce((prev, el) => {
+      prev.push(el.name)
+      return prev;
+    }, [])
+
     let incomes = null;
 
     if (incomeName) {
-      incomes = await Income.find({
+      incomes = await SaleProduct.find({
         market,
         createdAt: {
           $gte: startDate,
@@ -90,13 +101,16 @@ module.exports.get = async (req, res) => {
         .sort({ createdAt: -1 })
         .select('-isArchive -updatedAt -__v')
         .populate({
-          path: 'incomeName',
-          select: 'name',
-          match: { _id: incomeName },
+          path: 'product',
+          select: 'productdata isFree',
+          populate: {
+            path: "productdata",
+            select: "name"
+          }
         })
-        .then((incomes) => filter(incomes, (income) => income.incomeName));
+        .then((incomes) => filter(incomes, (income) => income.isFree && income.product.productdata.name === incomeName));
     } else {
-      incomes = await Income.find({
+      incomes = await SaleProduct.find({
         market,
         createdAt: {
           $gte: startDate,
@@ -106,25 +120,24 @@ module.exports.get = async (req, res) => {
         .sort({ createdAt: -1 })
         .select('-isArchive -updatedAt -__v')
         .populate({
-          path: 'incomeName',
-          select: 'name',
-        });
+          path: 'product',
+          select: 'productdata isFree',
+          populate: {
+            path: "productdata",
+            select: "name"
+          }
+        })
+        .then((incomes) => filter(incomes, (income) => income.product.isFree && filterNames.includes(income.product.productdata.name)));
     }
 
-    const totalprice = incomes.reduce(
-      (prev, income) => prev + income.totalprice,
-      0
-    );
-    const totalpriceuzs = incomes.reduce(
-      (prev, income) => prev + income.totalpriceuzs,
-      0
-    );
+    const total = incomes.reduce((prev, el) => prev + el.totalprice, 0)
+    const totaluzs = incomes.reduce((prev, el) => prev + el.totalpriceuzs, 0)
 
     res.status(200).json({
-      totalprice,
-      totalpriceuzs,
       count: incomes.length,
       incomes: incomes.splice(currentPage * countPage, countPage),
+      total,
+      totaluzs
     });
   } catch (error) {
     console.log(error);

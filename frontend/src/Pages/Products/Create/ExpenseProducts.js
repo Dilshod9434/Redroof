@@ -1,16 +1,18 @@
-import React, {useEffect, useState} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
-import {getExpenseProducts} from './productSlice'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getExpenseProducts } from './productSlice'
 import Pagination from '../../../Components/Pagination/Pagination'
 import SearchForm from '../../../Components/SearchForm/SearchForm'
 import Table from '../../../Components/Table/Table'
 import UniversalModal from '../../../Components/Modal/UniversalModal'
+import { universalToast } from '../../../Components/ToastMessages/ToastMessages'
+import Api from "../../../Config/Api"
 
 const ExpenseProducts = () => {
     const {
-        market: {_id},
+        market: { _id },
     } = useSelector((state) => state.login)
-    const {productExpense} = useSelector((state) => state.products)
+    const { productExpense } = useSelector((state) => state.products)
     const dispatch = useDispatch()
     const [startDate, setStartDate] = useState(
         new Date(
@@ -53,6 +55,24 @@ const ExpenseProducts = () => {
         setProductsForCheck(null)
     }
 
+    const handleDelete = async (expenseproduct) => {
+        try {
+            const { data } = await Api.post('/expense_product/delete', { expenseproduct })
+            universalToast(data.message, 'success')
+            dispatch(
+                getExpenseProducts({
+                    startDate,
+                    endDate,
+                    currentPage,
+                    countPage,
+                    market: _id,
+                })
+            )
+        } catch (error) {
+            universalToast(error, 'error')
+        }
+    }
+
     useEffect(() => {
         dispatch(
             getExpenseProducts({
@@ -77,7 +97,7 @@ const ExpenseProducts = () => {
             </div>
             <SearchForm
                 filterBy={['total', 'startDate', 'endDate']}
-                filterByTotal={({value}) => {
+                filterByTotal={({ value }) => {
                     setCountPage(value)
                     setCurrentPage(0)
                 }}
@@ -102,6 +122,7 @@ const ExpenseProducts = () => {
                             page={'expenseProducts'}
                             headers={headers}
                             Print={handleClickPrint}
+                            Delete={(product) => handleDelete(product)}
                         />
                     )}
             </div>

@@ -1,8 +1,8 @@
-import {uniqueId, map} from 'lodash'
-import React, {useState} from 'react'
+import { uniqueId, map } from 'lodash'
+import React, { useState } from 'react'
 import TableBtn from '../../Buttons/TableBtn'
 
-export const DebtsTableRow = ({data, currency, Pay, Print, Edit}) => {
+export const DebtsTableRow = ({ data, currency, Pay, Print, Edit }) => {
     const [isEditComment, setIsEditComment] = useState(null)
 
     return (
@@ -45,11 +45,21 @@ export const DebtsTableRow = ({data, currency, Pay, Print, Edit}) => {
                     <td className='text-right td py-[0.625rem] font-medium'>
                         {currency === 'UZS'
                             ? (Math.round(debt.debtuzs * 1) / 1).toLocaleString(
-                                  'ru-RU'
-                              )
+                                'ru-RU'
+                            )
                             : (
-                                  Math.round(debt.debt * 1000) / 1000
-                              ).toLocaleString('ru-RU')}{' '}
+                                Math.round(debt.debt * 1000) / 1000
+                            ).toLocaleString('ru-RU')}{' '}
+                        <span className='text-error-500'>{currency}</span>
+                    </td>
+                    <td className='text-right td py-[0.625rem] font-medium'>
+                        {currency === 'UZS'
+                            ? (Math.round(debt.totaldebtuzs * 1) / 1).toLocaleString(
+                                'ru-RU'
+                            )
+                            : (
+                                Math.round(debt.totaldebt * 1000) / 1000
+                            ).toLocaleString('ru-RU')}{' '}
                         <span className='text-error-500'>{currency}</span>
                     </td>
                     <td className='td border-r-0 py-[6px]'>

@@ -1,6 +1,6 @@
-import {lazy} from 'react'
-import {map, uniqueId} from 'lodash'
-import {Route} from 'react-router-dom'
+import { lazy } from 'react'
+import { map, uniqueId } from 'lodash'
+import { Route } from 'react-router-dom'
 import ExpenseProducts from './Products/Create/ExpenseProducts.js'
 // pages -->
 const SellersReport = lazy(() => import('./Seller/SellersReport.js'))
@@ -222,14 +222,6 @@ const directorRoutes = [
     },
     {
         path: '/income_consumption',
-        element: <IncomeConsumption />,
-    },
-    {
-        path: '/income_consumption/income',
-        element: <Income />,
-    },
-    {
-        path: '/income_consumption/consumption',
         element: <Consumption />,
     },
     {

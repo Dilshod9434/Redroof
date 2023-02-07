@@ -595,7 +595,7 @@ module.exports.delete = async (req, res) => {
       countPage,
     } = req.body;
     const marke = await Market.findById(market);
-
+    console.log(productdata);
     if (!marke) {
       return res.status(400).json({
         message: "Diqqat! Do'kon ma'lumotlari topilmadi.",
@@ -627,18 +627,18 @@ module.exports.delete = async (req, res) => {
       });
     }
 
-    await ProductData.findByIdAndUpdate(productdata._id, {
+    await ProductData.findByIdAndUpdate(productdata, {
       $pull: {
         products: new ObjectId(_id),
       },
     });
-
+    // await ProductData.findByIdAndDelete(productdata);
     const productData = await ProductData.findById(productdata);
     if (
       productData.products.length === 0 &&
       market === productData.market.toString()
     ) {
-      await ProductData.findByIdAndDelete(productdata._id);
+      await ProductData.findByIdAndDelete(productdata);
       await Category.findByIdAndUpdate(category, {
         $pull: {
           products: new ObjectId(productData._id),
@@ -686,6 +686,7 @@ module.exports.delete = async (req, res) => {
       count,
     });
   } catch (error) {
+    console.log(error);
     res.status(501).json({ error: 'Serverda xatolik yuz berdi...' });
   }
 };

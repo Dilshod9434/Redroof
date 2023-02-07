@@ -1,8 +1,8 @@
 import React from 'react'
 import TableBtn from '../../Buttons/TableBtn'
-import {map} from 'lodash'
-import {roundUsd, roundUzs} from '../../../App/globalFunctions'
-import {useSelector} from 'react-redux'
+import { map } from 'lodash'
+import { roundUsd, roundUzs } from '../../../App/globalFunctions'
+import { useSelector } from 'react-redux'
 
 export const ExpenseProductTableRow = ({
     data,
@@ -11,7 +11,7 @@ export const ExpenseProductTableRow = ({
     Print,
     Delete,
 }) => {
-    const {currencyType} = useSelector((state) => state.currency)
+    const { currencyType } = useSelector((state) => state.currency)
     return (
         <>
             {map(data, (product, index) => (
@@ -35,6 +35,11 @@ export const ExpenseProductTableRow = ({
                                 type={'print'}
                                 bgcolor={'bg-primary-800'}
                                 onClick={() => Print(product.products)}
+                            />
+                            <TableBtn
+                                type={'delete'}
+                                bgcolor={'bg-error-500'}
+                                onClick={() => Delete(product)}
                             />
                         </div>
                     </td>

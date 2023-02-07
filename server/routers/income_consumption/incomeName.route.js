@@ -48,11 +48,13 @@ module.exports.update = async (req, res) => {
 
 module.exports.delete = async (req, res) => {
   try {
-    const { _id } = req.query;
+    const { id } = req.body;
 
-    await IncomeName.findByIdAndDelete(_id);
+    await IncomeName.findByIdAndDelete(id);
 
-    res.status(200).json(_id);
+    res.status(200).json({
+      message: "Kirim/Chiqim nomi o'chirildi!"
+    });
   } catch (error) {
     res.status(501).json({ error: 'Serverda xatolik yuz berdi...' });
   }

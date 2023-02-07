@@ -636,7 +636,7 @@ module.exports.getsaleconnectors = async (req, res) => {
       })
       .populate(
         'payments',
-        'payment paymentuzs comment totalprice totalpriceuzs createdAt'
+        'payment paymentuzs comment totalprice totalpriceuzs createdAt cash cashuzs card carduzs transfer transferuzs'
       )
       .populate(
         'discounts',
@@ -1044,18 +1044,18 @@ module.exports.getreportproducts = async (req, res) => {
         filter(saleproducts, (saleproduct) =>
           search.nameofclient.length > 0
             ? saleproduct.product.productdata &&
-              !saleproduct.product.isFree &&
-              saleproduct.product.productdata !== null &&
-              saleproduct.user &&
-              saleproduct.user !== null &&
-              saleproduct.saleconnector &&
-              saleproduct.saleconnector.client &&
-              saleproduct.saleconnector.client !== null
+            !saleproduct.product.isFree &&
+            saleproduct.product.productdata !== null &&
+            saleproduct.user &&
+            saleproduct.user !== null &&
+            saleproduct.saleconnector &&
+            saleproduct.saleconnector.client &&
+            saleproduct.saleconnector.client !== null
             : saleproduct.product.productdata &&
-              !saleproduct.product.isFree &&
-              saleproduct.product.productdata !== null &&
-              saleproduct.user &&
-              saleproduct.user !== null
+            !saleproduct.product.isFree &&
+            saleproduct.product.productdata !== null &&
+            saleproduct.user &&
+            saleproduct.user !== null
         )
       );
 
@@ -1097,18 +1097,18 @@ module.exports.getreportproducts = async (req, res) => {
         filter(saleproducts, (saleproduct) =>
           search.nameofclient.length > 0
             ? saleproduct.product.productdata &&
-              !saleproduct.product.isFree &&
-              saleproduct.product.productdata !== null &&
-              saleproduct.user &&
-              saleproduct.user !== null &&
-              saleproduct.saleconnector &&
-              saleproduct.saleconnector.client &&
-              saleproduct.saleconnector.client !== null
+            !saleproduct.product.isFree &&
+            saleproduct.product.productdata !== null &&
+            saleproduct.user &&
+            saleproduct.user !== null &&
+            saleproduct.saleconnector &&
+            saleproduct.saleconnector.client &&
+            saleproduct.saleconnector.client !== null
             : saleproduct.product.productdata &&
-              !saleproduct.product.isFree &&
-              saleproduct.product.productdata !== null &&
-              saleproduct.user &&
-              saleproduct.user !== null
+            !saleproduct.product.isFree &&
+            saleproduct.product.productdata !== null &&
+            saleproduct.user &&
+            saleproduct.user !== null
         )
       );
 
@@ -1188,16 +1188,16 @@ module.exports.getexcelreportproducts = async (req, res) => {
         filter(saleproducts, (saleproduct) =>
           search.nameofclient.length > 0
             ? saleproduct.product.productdata &&
-              saleproduct.product.productdata !== null &&
-              saleproduct.user &&
-              saleproduct.user !== null &&
-              saleproduct.saleconnector &&
-              saleproduct.saleconnector.client &&
-              saleproduct.saleconnector.client !== null
+            saleproduct.product.productdata !== null &&
+            saleproduct.user &&
+            saleproduct.user !== null &&
+            saleproduct.saleconnector &&
+            saleproduct.saleconnector.client &&
+            saleproduct.saleconnector.client !== null
             : saleproduct.product.productdata &&
-              saleproduct.product.productdata !== null &&
-              saleproduct.user &&
-              saleproduct.user !== null
+            saleproduct.product.productdata !== null &&
+            saleproduct.user &&
+            saleproduct.user !== null
         )
       );
 

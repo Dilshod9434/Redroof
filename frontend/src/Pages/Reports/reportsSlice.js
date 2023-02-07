@@ -1,12 +1,12 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
-import {universalToast} from '../../Components/ToastMessages/ToastMessages'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { universalToast } from '../../Components/ToastMessages/ToastMessages'
 import Api from '../../Config/Api'
 
 export const getReports = createAsyncThunk(
     'reports/getReports',
-    async (body, {rejectWithValue}) => {
+    async (body, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/reports/getreports', body)
+            const { data } = await Api.post('/reports/getreports', body)
             return data
         } catch (error) {
             return rejectWithValue(error)
@@ -16,9 +16,9 @@ export const getReports = createAsyncThunk(
 
 export const getSales = createAsyncThunk(
     'reports/getSales',
-    async (body, {rejectWithValue}) => {
+    async (body, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/reports/getsalesreport', body)
+            const { data } = await Api.post('/reports/getsalesreport', body)
             return data
         } catch (error) {
             return rejectWithValue(error)
@@ -28,9 +28,9 @@ export const getSales = createAsyncThunk(
 
 export const getProfit = createAsyncThunk(
     'reports/getProfit',
-    async (body, {rejectWithValue}) => {
+    async (body, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/reports/profitreport', body)
+            const { data } = await Api.post('/reports/profitreport', body)
             return data
         } catch (error) {
             return rejectWithValue(error)
@@ -40,9 +40,9 @@ export const getProfit = createAsyncThunk(
 
 export const getPaymentReport = createAsyncThunk(
     'reports/getPaymentReport',
-    async (body, {rejectWithValue}) => {
+    async (body, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/reports/paymentsreport', body)
+            const { data } = await Api.post('/reports/paymentsreport', body)
             return data
         } catch (error) {
             return rejectWithValue(error)
@@ -52,9 +52,9 @@ export const getPaymentReport = createAsyncThunk(
 
 export const getDebts = createAsyncThunk(
     'reports/getDebts',
-    async (body, {rejectWithValue}) => {
+    async (body, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/reports/getdebtsreport', body)
+            const { data } = await Api.post('/reports/getdebtsreport', body)
             return data
         } catch (error) {
             return rejectWithValue(error)
@@ -64,9 +64,9 @@ export const getDebts = createAsyncThunk(
 
 export const getDiscounts = createAsyncThunk(
     'reports/getDsicounts',
-    async (body, {rejectWithValue}) => {
+    async (body, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/reports/getdiscountsreport', body)
+            const { data } = await Api.post('/reports/getdiscountsreport', body)
             return data
         } catch (error) {
             return rejectWithValue(error)
@@ -76,9 +76,9 @@ export const getDiscounts = createAsyncThunk(
 
 export const payDebt = createAsyncThunk(
     'reports/payDebt',
-    async (body, {rejectWithValue}) => {
+    async (body, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/sales/saleproducts/payment', body)
+            const { data } = await Api.post('/sales/saleproducts/payment', body)
             return data
         } catch (error) {
             return rejectWithValue(error)
@@ -88,9 +88,9 @@ export const payDebt = createAsyncThunk(
 
 export const getBackProducts = createAsyncThunk(
     'reports/backProducts',
-    async (body, {rejectWithValue}) => {
+    async (body, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/reports/getbackproducts', body)
+            const { data } = await Api.post('/reports/getbackproducts', body)
             return data
         } catch (error) {
             return rejectWithValue(error)
@@ -100,9 +100,9 @@ export const getBackProducts = createAsyncThunk(
 
 export const getExpensesReport = createAsyncThunk(
     'reports/getExpenses',
-    async (body, {rejectWithValue}) => {
+    async (body, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/reports/expensesreport', body)
+            const { data } = await Api.post('/reports/expensesreport', body)
             return data
         } catch (error) {
             return rejectWithValue(error)
@@ -112,9 +112,9 @@ export const getExpensesReport = createAsyncThunk(
 
 export const getMonthlyReport = createAsyncThunk(
     'reports/getMonthlyReport',
-    async (body = {}, {rejectWithValue}) => {
+    async (body = {}, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/chart/getmonthsales', body)
+            const { data } = await Api.post('/chart/getmonthsales', body)
             return data
         } catch (error) {
             return rejectWithValue(error)
@@ -124,9 +124,9 @@ export const getMonthlyReport = createAsyncThunk(
 
 export const getProducts = createAsyncThunk(
     'reports/getProducts',
-    async (body, {rejectWithValue}) => {
+    async (body, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/reports/productsreport', body)
+            const { data } = await Api.post('/reports/productsreport', body)
             return data
         } catch (error) {
             return rejectWithValue(error)
@@ -136,9 +136,9 @@ export const getProducts = createAsyncThunk(
 
 export const getIncomings = createAsyncThunk(
     'reports/getIncomings',
-    async (body, {rejectWithValue}) => {
+    async (body, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/reports/incomingsreport', body)
+            const { data } = await Api.post('/reports/incomingsreport', body)
             return data
         } catch (error) {
             return rejectWithValue(error)
@@ -148,9 +148,9 @@ export const getIncomings = createAsyncThunk(
 
 export const getReportsForTotal = createAsyncThunk(
     'reports/getReportsForTotal',
-    async (body, {rejectWithValue}) => {
+    async (body, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/reports/getreports', body)
+            const { data } = await Api.post('/reports/getreports', body)
             return data
         } catch (error) {
             return rejectWithValue(error)
@@ -160,9 +160,9 @@ export const getReportsForTotal = createAsyncThunk(
 
 export const getSaleProducts = createAsyncThunk(
     'reports/getSaleProducts',
-    async (body, {rejectWithValue}) => {
+    async (body, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/reports/getsaleproducts', body)
+            const { data } = await Api.post('/reports/getsaleproducts', body)
             return data
         } catch (error) {
             return rejectWithValue(error)
@@ -172,12 +172,36 @@ export const getSaleProducts = createAsyncThunk(
 
 export const changeDebtComment = createAsyncThunk(
     'reports/changeDebtComment',
-    async (body, {rejectWithValue}) => {
+    async (body, { rejectWithValue }) => {
         try {
-            const {data} = await Api.post('/reports/debtcomment', body)
+            const { data } = await Api.post('/reports/debtcomment', body)
             return data
         } catch (error) {
             return rejectWithValue(error)
+        }
+    }
+)
+
+export const getIncomes = createAsyncThunk(
+    'income/get',
+    async (body = {}, { rejectWithValue }) => {
+        try {
+            const { data } = await Api.post('/income/get', body)
+            return data
+        } catch (error) {
+            rejectWithValue(error)
+        }
+    }
+)
+
+export const getConsumption = createAsyncThunk(
+    'consumption/get',
+    async (body = {}, { rejectWithValue }) => {
+        try {
+            const { data } = await Api.post('/consumption/get', body)
+            return data
+        } catch (error) {
+            rejectWithValue(error)
         }
     }
 )
@@ -199,6 +223,7 @@ const reportSlice = createSlice({
         monthlyReportError: null,
         debtcomment: null,
         successDebtComment: false,
+        totalpayment: null,
         debtid: null,
         startDate: new Date(
             new Date(
@@ -214,6 +239,8 @@ const reportSlice = createSlice({
                 new Date().getDate()
             ).setHours(23, 59, 59, 59)
         ).toISOString(),
+        total: 0,
+        totaluzs: 0
     },
     reducers: {
         clearErrorReports: (state) => {
@@ -223,13 +250,13 @@ const reportSlice = createSlice({
             state.datas = []
             state.count = 0
         },
-        changeStartDate: (state, {payload}) => {
+        changeStartDate: (state, { payload }) => {
             state.startDate = payload.start
         },
-        changeEndDate: (state, {payload}) => {
+        changeEndDate: (state, { payload }) => {
             state.endDate = payload.end
         },
-        setDebtComment: (state, {payload: {comment, debtid}}) => {
+        setDebtComment: (state, { payload: { comment, debtid } }) => {
             state.debtcomment = comment
             state.debtid = debtid
         },
@@ -241,11 +268,11 @@ const reportSlice = createSlice({
         [getReports.pending]: (state) => {
             state.loading = true
         },
-        [getReports.fulfilled]: (state, {payload}) => {
+        [getReports.fulfilled]: (state, { payload }) => {
             state.loading = false
             state.reports = payload
         },
-        [getReports.rejected]: (state, {payload}) => {
+        [getReports.rejected]: (state, { payload }) => {
             state.loading = false
             state.errorReports = payload
             universalToast(payload, 'error')
@@ -253,11 +280,11 @@ const reportSlice = createSlice({
         [getSales.pending]: (state) => {
             state.loading = true
         },
-        [getSales.rejected]: (state, {payload}) => {
+        [getSales.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
-        [getSales.fulfilled]: (state, {payload: {data, count}}) => {
+        [getSales.fulfilled]: (state, { payload: { data, count } }) => {
             state.loading = false
             state.datas = data
             state.count = count
@@ -265,11 +292,11 @@ const reportSlice = createSlice({
         [getProfit.pending]: (state) => {
             state.loading = true
         },
-        [getProfit.rejected]: (state, {payload}) => {
+        [getProfit.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
-        [getProfit.fulfilled]: (state, {payload: {data, count}}) => {
+        [getProfit.fulfilled]: (state, { payload: { data, count } }) => {
             state.loading = false
             state.datas = data
             state.count = count
@@ -277,34 +304,35 @@ const reportSlice = createSlice({
         [getPaymentReport.pending]: (state) => {
             state.loading = true
         },
-        [getPaymentReport.rejected]: (state, {payload}) => {
+        [getPaymentReport.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
-        [getPaymentReport.fulfilled]: (state, {payload: {data, count}}) => {
+        [getPaymentReport.fulfilled]: (state, { payload: { data, count, total } }) => {
             state.loading = false
             state.datas = data
             state.count = count
+            state.totalpayment = total;
         },
         [getDebts.pending]: (state) => {
             state.loading = true
         },
-        [getDebts.rejected]: (state, {payload}) => {
+        [getDebts.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
-        [getDebts.fulfilled]: (state, {payload: {data}}) => {
+        [getDebts.fulfilled]: (state, { payload: { data } }) => {
             state.loading = true
             state.datas = data
         },
         [getDiscounts.pending]: (state) => {
             state.loading = true
         },
-        [getDiscounts.rejected]: (state, {payload}) => {
+        [getDiscounts.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
-        [getDiscounts.fulfilled]: (state, {payload: {data, count}}) => {
+        [getDiscounts.fulfilled]: (state, { payload: { data, count } }) => {
             state.loading = true
             state.datas = data
             state.count = count
@@ -312,7 +340,7 @@ const reportSlice = createSlice({
         [payDebt.pending]: (state) => {
             state.loading = true
         },
-        [payDebt.rejected]: (state, {payload}) => {
+        [payDebt.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
@@ -322,11 +350,11 @@ const reportSlice = createSlice({
         [getBackProducts.pending]: (state) => {
             state.loading = true
         },
-        [getBackProducts.rejected]: (state, {payload}) => {
+        [getBackProducts.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
-        [getBackProducts.fulfilled]: (state, {payload: {data, count}}) => {
+        [getBackProducts.fulfilled]: (state, { payload: { data, count } }) => {
             state.loading = false
             state.datas = data
             state.count = count
@@ -334,11 +362,11 @@ const reportSlice = createSlice({
         [getExpensesReport.pending]: (state) => {
             state.loading = true
         },
-        [getExpensesReport.rejected]: (state, {payload}) => {
+        [getExpensesReport.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
-        [getExpensesReport.fulfilled]: (state, {payload: {data, count}}) => {
+        [getExpensesReport.fulfilled]: (state, { payload: { data, count } }) => {
             state.loading = true
             state.datas = data
             state.count = count
@@ -346,44 +374,44 @@ const reportSlice = createSlice({
         [getMonthlyReport.pending]: (state) => {
             state.monthlyReportLoading = true
         },
-        [getMonthlyReport.rejected]: (state, {payload}) => {
+        [getMonthlyReport.rejected]: (state, { payload }) => {
             state.monthlyReportLoading = false
             universalToast(payload, 'error')
         },
-        [getMonthlyReport.fulfilled]: (state, {payload}) => {
+        [getMonthlyReport.fulfilled]: (state, { payload }) => {
             state.monthlyReportLoading = false
             state.monthlyReport = payload
         },
         [getProducts.pending]: (state) => {
             state.loading = true
         },
-        [getProducts.fulfilled]: (state, {payload}) => {
+        [getProducts.fulfilled]: (state, { payload }) => {
             state.loading = false
             state.productreport = payload
         },
-        [getProducts.rejected]: (state, {payload}) => {
+        [getProducts.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
         [getIncomings.pending]: (state) => {
             state.loading = true
         },
-        [getIncomings.fulfilled]: (state, {payload}) => {
+        [getIncomings.fulfilled]: (state, { payload }) => {
             state.loading = false
             state.incomingreport = payload
         },
-        [getIncomings.rejected]: (state, {payload}) => {
+        [getIncomings.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(`${payload}`, 'error')
         },
         [getReportsForTotal.pending]: (state) => {
             state.loading = true
         },
-        [getReportsForTotal.fulfilled]: (state, {payload}) => {
+        [getReportsForTotal.fulfilled]: (state, { payload }) => {
             state.loading = false
             state.totalreports = payload
         },
-        [getReportsForTotal.rejected]: (state, {payload}) => {
+        [getReportsForTotal.rejected]: (state, { payload }) => {
             state.loading = false
             state.errorReports = payload
             universalToast(payload, 'error')
@@ -391,18 +419,18 @@ const reportSlice = createSlice({
         [getSaleProducts.pending]: (state) => {
             state.loading = true
         },
-        [getSaleProducts.fulfilled]: (state, {payload}) => {
+        [getSaleProducts.fulfilled]: (state, { payload }) => {
             state.loading = false
             state.saleproductsreport = payload
         },
-        [getSaleProducts.rejected]: (state, {payload}) => {
+        [getSaleProducts.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(payload, 'error')
         },
         [changeDebtComment.pending]: (state) => {
             state.loading = true
         },
-        [changeDebtComment.rejected]: (state, {payload}) => {
+        [changeDebtComment.rejected]: (state, { payload }) => {
             state.loading = false
             universalToast(payload, 'error')
         },
@@ -410,6 +438,34 @@ const reportSlice = createSlice({
             state.loading = false
             state.successDebtComment = true
         },
+        [getIncomes.pending]: (state) => {
+            state.loading = true;
+        },
+        [getIncomes.fulfilled]: (state, { payload: { count, incomes, total, totaluzs } }) => {
+            state.loading = false;
+            state.datas = incomes;
+            state.count = count;
+            state.total = total;
+            state.totaluzs = totaluzs
+        },
+        [getIncomes.rejected]: (state, { payload }) => {
+            state.loading = false
+            universalToast(payload, 'error')
+        },
+        [getConsumption.pending]: (state) => {
+            state.loading = true;
+        },
+        [getConsumption.fulfilled]: (state, { payload: { count, consumptions, totalprice, totalpriceuzs } }) => {
+            state.loading = false;
+            state.datas = consumptions;
+            state.count = count;
+            state.total = totalprice;
+            state.totaluzs = totalpriceuzs;
+        },
+        [getConsumption.rejected]: (state, { payload }) => {
+            state.loading = false
+            universalToast(payload, 'error')
+        }
     },
 })
 

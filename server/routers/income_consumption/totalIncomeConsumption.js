@@ -1,9 +1,11 @@
+const { filter } = require('lodash');
 const { Consumption } = require('../../models/Income_Consumption/Consumption');
 const {
   IncomeName,
   Income,
 } = require('../../models/Income_Consumption/Income');
 const { Market } = require('../../models/MarketAndBranch/Market');
+const { SaleProduct } = require('../../models/Sales/SaleProduct');
 
 module.exports.getTotal = async (req, res) => {
   try {
@@ -22,6 +24,11 @@ module.exports.getTotal = async (req, res) => {
       .select('-isArchive -updatedAt -__v')
       .lean();
 
+    const namesArr = [...names].reduce((prev, el) => {
+      prev.push(el.name)
+      return prev
+    }, [])
+
     for (const name of names) {
       let count = new Date(startDate);
       let currentDate = new Date(endDate);
@@ -31,9 +38,8 @@ module.exports.getTotal = async (req, res) => {
         let incomes = null;
 
         if (type === 'incomes') {
-          incomes = await Income.find({
+          incomes = await SaleProduct.find({
             market,
-            incomeName: name._id,
             createdAt: {
               $gte: new Date(
                 new Date(count).setHours(0, 0, 0, 0)
@@ -44,7 +50,15 @@ module.exports.getTotal = async (req, res) => {
             },
           })
             .select('-isArchive -updatedAt -__v')
-            .lean();
+            .populate({
+              path: "product",
+              select: "productdata isFree",
+              populate: {
+                path: "productdata",
+                select: "name"
+              }
+            })
+            .then((incomes) => filter(incomes, (income) => income.product.isFree && income.product.productdata.name === name.name))
         }
         if (type === 'consumptions') {
           incomes = await Consumption.find({
@@ -62,6 +76,7 @@ module.exports.getTotal = async (req, res) => {
             .select('-isArchive -updatedAt -__v')
             .lean();
         }
+
         dailyIncomes.push({
           totalprice: incomes.reduce(
             (prev, income) => prev + income.totalprice,
@@ -80,49 +95,8 @@ module.exports.getTotal = async (req, res) => {
       name.dailyIncomes = dailyIncomes;
     }
 
-    const incomesData = await Income.find({
-      market,
-      createdAt: {
-        $gte: startDate,
-        $lte: endDate,
-      },
-    }).lean();
-
-    const consData = await Consumption.find({
-      market,
-      createdAt: {
-        $gte: startDate,
-        $lte: endDate,
-      },
-    }).lean();
-
-    const currentIncomes = incomesData.reduce(
-      (prev, income) => prev + income.totalprice,
-      0
-    );
-    const currentIncomesUzs = incomesData.reduce(
-      (prev, income) => prev + income.totalpriceuzs,
-      0
-    );
-    const currentConsumptions = consData.reduce(
-      (prev, income) => prev + income.totalprice,
-      0
-    );
-    const currentConsumptionsUzs = consData.reduce(
-      (prev, income) => prev + income.totalpriceuzs,
-      0
-    );
-
     res.status(200).json({
       names,
-      current: {
-        currentIncomes,
-        currentIncomesUzs,
-        currentConsumptions,
-        currentConsumptionsUzs,
-        balance: currentIncomes - currentConsumptions,
-        balanceuzs: currentIncomesUzs - currentConsumptionsUzs,
-      },
     });
   } catch (error) {
     console.log(error);

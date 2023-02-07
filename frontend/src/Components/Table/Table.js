@@ -1,49 +1,50 @@
-import {PackmanTableRow} from './TableRows/PackmanTableRow'
-import {SellerTableRow} from './TableRows/SellerTableRow'
-import {CategoryTableRow} from './TableRows/CategoryTableRow'
-import {RegisterIncomingTableRow} from './TableRows/RegisterIncomingTableRow'
-import {InventoriesTableRow} from './TableRows/InventoriesTableRow'
-import {InventoryTableRow} from './TableRows/InventoryTableRow'
-import {ProductReportTableRow} from './TableRows/ProductReportTableRow'
-import {ProductTableRow} from './TableRows/ProductTableRow'
-import {SupplierTableRow} from './TableRows/SupplierTableRow'
-import {UnitTableRow} from './TableRows/UnitTableRow'
+import { PackmanTableRow } from './TableRows/PackmanTableRow'
+import { SellerTableRow } from './TableRows/SellerTableRow'
+import { CategoryTableRow } from './TableRows/CategoryTableRow'
+import { RegisterIncomingTableRow } from './TableRows/RegisterIncomingTableRow'
+import { InventoriesTableRow } from './TableRows/InventoriesTableRow'
+import { InventoryTableRow } from './TableRows/InventoryTableRow'
+import { ProductReportTableRow } from './TableRows/ProductReportTableRow'
+import { ProductTableRow } from './TableRows/ProductTableRow'
+import { SupplierTableRow } from './TableRows/SupplierTableRow'
+import { UnitTableRow } from './TableRows/UnitTableRow'
 import Thead from './Thead'
-import {IncomingsTableRow} from './TableRows/IncomingsTableRow'
-import {RegisterSaleTableRow} from './TableRows/RegisterSaleTableRow'
-import {TemporaryIncomingsTableRow} from './TableRows/TemporaryIncomingsTableRow'
-import {TemporarySaleTableRow} from './TableRows/TemporarySaleTableRow'
-import {SalesListTableRow} from './TableRows/SalesListTableRow'
-import {ClientTableRow} from './TableRows/ClientTableRow'
-import {ExchangenerateTableRow} from './TableRows/ExchangenerateTableRow'
-import {SaleReturnTableRow} from './TableRows/SaleReturnTableRow'
-import {CashierSaleTableRow} from './TableRows/CashierSaleTableRow'
-import {PaymentsTableRow} from './TableRows/PaymentsTableRow'
-import {IncomeTableRow} from './TableRows/IncomeTableRow'
-import {DebtsTableRow} from './TableRows/DebtsTableRow'
-import {DiscountTableRow} from './TableRows/DiscountTableRow'
-import {ExpensesTableRow} from './TableRows/ExpensesTableRow'
-import {BarcodeTableRow} from './TableRows/BarcodeTableRow.js'
-import {AdminProductTableRow} from './TableRows/AdminProductTableRow'
-import {ReturnProductsTableRow} from './TableRows/ReturnProductsTableRow.js'
-import {GeneralReportTableRow} from './TableRows/GeneralReportTableRow.js'
-import {RegisterSaleTableFooter} from './TableFooters/RegisterSaleTableFooter.js'
-import {FilialShopTableRow} from './TableRows/FilialShopTableRow'
+import { IncomingsTableRow } from './TableRows/IncomingsTableRow'
+import { RegisterSaleTableRow } from './TableRows/RegisterSaleTableRow'
+import { TemporaryIncomingsTableRow } from './TableRows/TemporaryIncomingsTableRow'
+import { TemporarySaleTableRow } from './TableRows/TemporarySaleTableRow'
+import { SalesListTableRow } from './TableRows/SalesListTableRow'
+import { ClientTableRow } from './TableRows/ClientTableRow'
+import { ExchangenerateTableRow } from './TableRows/ExchangenerateTableRow'
+import { SaleReturnTableRow } from './TableRows/SaleReturnTableRow'
+import { CashierSaleTableRow } from './TableRows/CashierSaleTableRow'
+import { PaymentsTableRow } from './TableRows/PaymentsTableRow'
+import { IncomeTableRow } from './TableRows/IncomeTableRow'
+import { DebtsTableRow } from './TableRows/DebtsTableRow'
+import { DiscountTableRow } from './TableRows/DiscountTableRow'
+import { ExpensesTableRow } from './TableRows/ExpensesTableRow'
+import { BarcodeTableRow } from './TableRows/BarcodeTableRow.js'
+import { AdminProductTableRow } from './TableRows/AdminProductTableRow'
+import { ReturnProductsTableRow } from './TableRows/ReturnProductsTableRow.js'
+import { GeneralReportTableRow } from './TableRows/GeneralReportTableRow.js'
+import { RegisterSaleTableFooter } from './TableFooters/RegisterSaleTableFooter.js'
+import { FilialShopTableRow } from './TableRows/FilialShopTableRow'
 import DailyReport from './TableRows/DailyReport.js'
 import SupplierIncomingsTableRow from './TableRows/SupplierIncomingsTableRow'
-import {FilialShopDataIdTableRow} from './TableRows/FilialShopDataIdTablerow'
-import {CategoryReportTableRow} from './TableRows/CategoryReportTableRow'
-import {MarketProductsTableRow} from './TableRows/MarketProductsTableRow'
-import {PartnerProductsTableRow} from './TableRows/PartnerProductsTableRow'
-import {RegisterOrdersTableRow} from './TableRows/RegisterOrdersTableRow'
-import {OrderProductsTableRow} from './TableRows/OrderProductsTableRow'
-import {SavedOrdersTableRow} from './TableRows/SavedOrdersTableRow.js'
-import {RegisterIncomingOrdersTableRow} from './TableRows/RegisterIncomingOrdersTableRow.js'
-import {IncomingOrderProductsTableRow} from './TableRows/IncomingOrderProductsTableRow.js'
-import {ReceiveOrderProductsTableRow} from './TableRows/ReceiveOrderProductsTableRow.js'
-import {IncomesTableRow} from './TableRows/IncomesTableRow'
-import {IncomeNameTableRow} from './TableRows/IncomeNameTableRow'
-import {ExpenseProductTableRow} from './TableRows/ExpenseProductsTableRow'
+import { FilialShopDataIdTableRow } from './TableRows/FilialShopDataIdTablerow'
+import { CategoryReportTableRow } from './TableRows/CategoryReportTableRow'
+import { MarketProductsTableRow } from './TableRows/MarketProductsTableRow'
+import { PartnerProductsTableRow } from './TableRows/PartnerProductsTableRow'
+import { RegisterOrdersTableRow } from './TableRows/RegisterOrdersTableRow'
+import { OrderProductsTableRow } from './TableRows/OrderProductsTableRow'
+import { SavedOrdersTableRow } from './TableRows/SavedOrdersTableRow.js'
+import { RegisterIncomingOrdersTableRow } from './TableRows/RegisterIncomingOrdersTableRow.js'
+import { IncomingOrderProductsTableRow } from './TableRows/IncomingOrderProductsTableRow.js'
+import { ReceiveOrderProductsTableRow } from './TableRows/ReceiveOrderProductsTableRow.js'
+import { IncomesTableRow } from './TableRows/IncomesTableRow'
+import { IncomeNameTableRow } from './TableRows/IncomeNameTableRow'
+import { ExpenseProductTableRow } from './TableRows/ExpenseProductsTableRow'
+import { ConsumptionsTableRow } from './TableRows/ConsumptionsTableRow'
 function Table({
     page,
     data,
@@ -321,7 +322,7 @@ function Table({
                         Print={Print}
                     />
                 )
-            case 'cash':
+            case 'payments':
                 return (
                     <PaymentsTableRow
                         currentPage={currentPage}
@@ -329,6 +330,7 @@ function Table({
                         currency={currency}
                         data={data}
                         type={type}
+                        Print={Print}
                     />
                 )
             case 'card':
@@ -358,6 +360,7 @@ function Table({
                         countPage={countPage}
                         currency={currency}
                         data={data}
+                        Print={Print}
                     />
                 )
             case 'debts':
@@ -393,6 +396,18 @@ function Table({
             case 'incomes':
                 return (
                     <IncomesTableRow
+                        data={data}
+                        currency={currency}
+                        currentPage={currentPage}
+                        countPage={countPage}
+                        Delete={Delete}
+                        Edit={Edit}
+                        type={type}
+                    />
+                )
+            case 'consumption':
+                return (
+                    <ConsumptionsTableRow
                         data={data}
                         currency={currency}
                         currentPage={currentPage}

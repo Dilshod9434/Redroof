@@ -1,8 +1,8 @@
 import React from 'react'
 import TableBtn from '../../Buttons/TableBtn'
-import {map} from 'lodash'
+import { map } from 'lodash'
 
-export const IncomeNameTableRow = ({data, Edit}) => {
+export const IncomeNameTableRow = ({ data, Edit, Delete }) => {
     return (
         <>
             {map(data, (incomeName, index) => (
@@ -18,6 +18,11 @@ export const IncomeNameTableRow = ({data, Edit}) => {
                                 type={'edit'}
                                 bgcolor={'bg-warning-500'}
                                 onClick={() => Edit(incomeName)}
+                            />
+                            <TableBtn
+                                type={'delete'}
+                                bgcolor={'bg-error-500'}
+                                onClick={() => Delete(incomeName._id)}
                             />
                         </div>
                     </td>

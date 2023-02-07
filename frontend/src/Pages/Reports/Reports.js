@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import CheckoutCards from '../../Components/CheckoutCard/CheckoutCards'
 import SearchForm from '../../Components/SearchForm/SearchForm.js'
-import {useDispatch, useSelector} from 'react-redux'
-import {universalToast} from '../../Components/ToastMessages/ToastMessages.js'
-import {uniqueId, map} from 'lodash'
+import { useDispatch, useSelector } from 'react-redux'
+import { universalToast } from '../../Components/ToastMessages/ToastMessages.js'
+import { uniqueId, map } from 'lodash'
 import {
     changeEndDate,
     changeStartDate,
@@ -14,12 +14,12 @@ import {
     getReportsForTotal,
     getSaleProducts,
 } from './reportsSlice.js'
-import {useTranslation} from 'react-i18next'
-import {motion} from 'framer-motion'
+import { useTranslation } from 'react-i18next'
+import { motion } from 'framer-motion'
 import UniversalModal from '../../Components/Modal/UniversalModal'
 
 const Reports = () => {
-    const {t} = useTranslation(['common'])
+    const { t } = useTranslation(['common'])
 
     const card = [
         {
@@ -36,16 +36,8 @@ const Reports = () => {
             type: 'expenses',
         },
         {
-            name: 'Naqd',
-            type: 'cash',
-        },
-        {
-            name: 'Plastik',
-            type: 'card',
-        },
-        {
-            name: 'O`tkazmalar',
-            type: 'transfer',
+            name: "Tushumlar",
+            type: 'payments',
         },
         {
             name: 'Qaytarilgan',
@@ -59,6 +51,14 @@ const Reports = () => {
             name: 'Qarzlar',
             type: 'debts',
         },
+        {
+            name: 'Kirim',
+            type: 'incoming',
+        },
+        {
+            name: 'Chiqim',
+            type: 'consumption',
+        }
     ]
 
     const dispatch = useDispatch()
@@ -74,7 +74,7 @@ const Reports = () => {
         endDate,
     } = useSelector((state) => state.reports)
 
-    const {currencyType} = useSelector((state) => state.currency)
+    const { currencyType } = useSelector((state) => state.currency)
 
     const [modalVisible, setModalVisible] = useState(false)
     const [modalBody, setModalBody] = useState(null)
@@ -90,10 +90,10 @@ const Reports = () => {
     }
 
     const handleStartDate = (e) => {
-        dispatch(changeStartDate({start: e.toISOString()}))
+        dispatch(changeStartDate({ start: e.toISOString() }))
     }
     const handleEndDate = (e) => {
-        dispatch(changeEndDate({end: e.toISOString()}))
+        dispatch(changeEndDate({ end: e.toISOString() }))
     }
 
     useEffect(() => {
@@ -132,10 +132,10 @@ const Reports = () => {
             animate='open'
             exit='collapsed'
             variants={{
-                open: {opacity: 1, height: 'auto'},
-                collapsed: {opacity: 0, height: 0},
+                open: { opacity: 1, height: 'auto' },
+                collapsed: { opacity: 0, height: 0 },
             }}
-            transition={{duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98]}}
+            transition={{ duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] }}
         >
             <SearchForm
                 filterBy={['startDate', 'endDate', 'printBtn']}

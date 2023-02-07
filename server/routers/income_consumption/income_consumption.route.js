@@ -16,7 +16,7 @@ router.delete('/income/delete/:id', authMiddleware, (req, res) => {
   require('./income.route').delete(req, res);
 });
 
-router.get('/income/get', authMiddleware, (req, res) => {
+router.post('/income/get', authMiddleware, (req, res) => {
   require('./income.route').get(req, res);
 });
 
@@ -29,8 +29,8 @@ router.put('/income_consumption_name/update', authMiddleware, (req, res) => {
   require('./incomeName.route').update(req, res);
 });
 
-router.delete(
-  '/income_consumption_name/delete/:id',
+router.post(
+  '/income_consumption_name/delete',
   authMiddleware,
   (req, res) => {
     require('./incomeName.route').delete(req, res);
@@ -54,7 +54,7 @@ router.delete('/consumption/delete/:id', authMiddleware, (req, res) => {
   require('./consumption.route').delete(req, res);
 });
 
-router.get('/consumption/get', authMiddleware, (req, res) => {
+router.post('/consumption/get', authMiddleware, (req, res) => {
   require('./consumption.route').get(req, res);
 });
 
