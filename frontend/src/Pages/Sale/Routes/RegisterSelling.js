@@ -186,7 +186,6 @@ const RegisterSelling = () => {
         }
     }
     const handleChangePaymentType = (type) => {
-        console.log(type)
         const all = allPayment - Number(paymentDiscount)
         const allUzs = allPaymentUzs - Number(paymentDiscountUzs)
         if (paymentType !== type) {
@@ -266,7 +265,6 @@ const RegisterSelling = () => {
                     setPaid(all)
                     setPaidUzs(allUzs)
                 } else {
-                    console.log('work')
                     warningMorePayment()
                 }
             } else if (type === 'card') {
@@ -631,7 +629,7 @@ const RegisterSelling = () => {
             }
         )
     }
-
+    console.log(location);
     const handleApproveReturn = () => {
         handleClosePay()
         const body = {
@@ -1271,7 +1269,7 @@ const RegisterSelling = () => {
         setTableProducts([...tableProducts, currentProduct])
     }
 
-    console.log(incomeNames);
+
 
     // ===============================================
     // ===============================================

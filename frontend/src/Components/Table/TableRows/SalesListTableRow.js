@@ -14,6 +14,8 @@ export const SalesListTableRow = ({
     editComment
 }) => {
 
+    console.log(data);
+
     const location = useLocation()
 
     const result = (prev, usd, uzs) => {
@@ -295,7 +297,7 @@ export const SalesListTableRow = ({
                                     bgcolor={'bg-error-500'}
                                     onClick={() =>
                                         linkToSale(
-                                            saleconnector.saleconnector,
+                                            saleconnector,
                                             true
                                         )
                                     }

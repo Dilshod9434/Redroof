@@ -1,9 +1,10 @@
 import React from 'react'
-import {useSelector} from 'react-redux'
-import {roundUsd, roundUzs} from '../../../App/globalFunctions'
+import { useSelector } from 'react-redux'
+import { roundUsd, roundUzs } from '../../../App/globalFunctions'
 
-const IncomeConsumptionTable = ({data}) => {
-    const {currencyType} = useSelector((state) => state.currency)
+const IncomeConsumptionTable = ({ data }) => {
+    const { currencyType } = useSelector((state) => state.currency)
+
 
     const filterData = () => {
         let dataLength = data[0].dailyIncomes.length
@@ -27,7 +28,6 @@ const IncomeConsumptionTable = ({data}) => {
     }
 
     const datas = filterData()
-
     return (
         <table className='overflow-x-auto w-full'>
             <thead className='rounded-t-lg sticky top-0'>
@@ -66,6 +66,16 @@ const IncomeConsumptionTable = ({data}) => {
                             ))}
                         </tr>
                     ))}
+            </tbody>
+            <tbody>
+                <tr className='tr'>
+                    <td className='td py-[0.375rem] min-w-[100px] font-bold'>Jami</td>
+                    {data && data.map((el, ind) => (
+                        <td key={ind} className='td py-[0.375rem] min-w-[100px] font-bold'>
+                            {currencyType === 'USD' ? el?.dailyIncomes.reduce((prev, el) => prev + el.totalprice, 0) : el?.dailyIncomes.reduce((prev, el) => prev + el.totalpriceuzs, 0)} {currencyType}
+                        </td>
+                    ))}
+                </tr>
             </tbody>
         </table>
     )

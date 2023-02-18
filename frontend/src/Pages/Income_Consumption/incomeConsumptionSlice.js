@@ -175,14 +175,14 @@ const incomeConsumptionSlice = createSlice({
         totalConsumptionsUzs: 0,
         loading: false,
         error: null,
-        startDate: new Date(
+        startDate:
             new Date(
                 new Date().getFullYear(),
                 new Date().getMonth(),
-                new Date().getDate() - 1
+                new Date().getDate()
             )
-        ).toISOString(),
-        endDate: new Date().toISOString(),
+        ,
+        endDate: new Date(),
     },
     reducers: {
         clearError: (state) => {

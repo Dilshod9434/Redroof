@@ -161,28 +161,35 @@ module.exports.getReport = async (req, res) => {
       }
     };
 
+    const expensesCons = await Consumption.find({
+      market,
+      createdAt: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    })
+      .select('totalprice totalpriceuzs type')
+      .lean()
+
 
     reports.payments.payments = payments.reduce((prev, payment) => {
-
       reports.payments.paymentscount++;
-      reports.payments.paymentsuzs += (payment.cashuzs + payment.carduzs + payment.transferuzs);
-      prev += (payment.cash + payment.card + payment.transfer)
-
+      reports.payments.paymentsuzs += payment.cashuzs
+      prev += payment.cash
       return prev;
+    }, 0) - expensesCons.reduce((prev, item) => {
+      if (item.type === 'cash') {
+        prev += item.totalprice
+      }
+      return prev
     }, 0)
 
-    // reports.payments.payments = saleconnector.reduce((prev, sale) => {
-    //   const payments = sale.payments.reduce((prev, payment) => {
-    //     if (payment.cash !== 0 || payment.card !== 0 || payment.transfer !== 0) {
-    //       reports.payments.paymentsuzs += payment.cashuzs + payment.carduzs + payment.transferuzs;
-    //       reports.payments.paymentscount++;
-    //       prev += payment.cash + payment.card + payment.transfer
-    //     }
-    //     return prev;
-    //   }, 0)
-    //   prev += payments;
-    //   return prev;
-    // }, 0)
+    reports.payments.paymentsuzs = reports.payments.paymentsuzs - expensesCons.reduce((prev, item) => {
+      if (item.type === 'cash') {
+        prev += item.totalpriceuzs
+      }
+      return prev;
+    }, 0)
 
 
     let incomingprice = 0;
